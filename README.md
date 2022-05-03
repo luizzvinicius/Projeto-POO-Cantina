@@ -1,2 +1,2 @@
 # Projeto POO
- Cantina
+ Projeto de POO que simula uma cantina

@@ -1,2 +1,2 @@
 # Projeto POO
- Projeto de POO que simula uma cantina
+ Projeto de POO (Java) que simula uma cantina

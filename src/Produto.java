@@ -15,34 +15,6 @@ public class Produto {
     this.qtdComprada = qtdComprada;
   }
 
-  public String getNome() {
-    return this.nome;
-  }
-
-  public String getDescricao() {
-    return this.descricao;
-  }
-
-  public double getPrecoVenda() {
-    return this.precoVenda;
-  }
-
-  public double getPrecoCompra() {
-    return this.precoCompra;
-  }
-
-  public int getQtdAtual() {
-    return this.qtdAtual;
-  }
-
-  public int getQtdComprada() {
-    return this.qtdComprada;
-  }
-
-  public int getQtdVendida() {
-    return this.qtdVendida;
-  }
-
   public void adicionarQtd(int qtd) {
     this.qtdAtual += qtd;
     this.qtdComprada += qtd;
@@ -81,5 +53,33 @@ public class Produto {
 
   public static int compararPelaQtdDecrescente(Produto p1, Produto p2) {
     return p2.getQtdAtual() - p1.getQtdAtual();
+  }
+
+  public String getNome() {
+    return this.nome;
+  }
+
+  public String getDescricao() {
+    return this.descricao;
+  }
+
+  public double getPrecoVenda() {
+    return this.precoVenda;
+  }
+
+  public double getPrecoCompra() {
+    return this.precoCompra;
+  }
+
+  public int getQtdAtual() {
+    return this.qtdAtual;
+  }
+
+  public int getQtdComprada() {
+    return this.qtdComprada;
+  }
+
+  public int getQtdVendida() {
+    return this.qtdVendida;
   }
 }

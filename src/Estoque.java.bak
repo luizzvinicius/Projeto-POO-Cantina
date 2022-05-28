@@ -1,0 +1,82 @@
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.sql.SQLException;
+
+public class Estoque implements Iterable<Produto> {
+  private static final String COMANDO_ADD = "INSERT INTO Produto" +
+      "(descricao, preco_venda, preco_compra, qtd_atual, qtd_comprada, estoque_minimo)" +
+      "VALUES (?, ?, ?, ?, ?, ?)";
+
+  private final Connection conexao;
+  private final List<Produto> estoque;
+  private final List<Produto> estoqueImodificavel;
+
+  public Estoque(Connection conexao) {
+    this.conexao = conexao;
+    this.estoque = new ArrayList<>();
+    this.estoqueImodificavel = Collections.unmodifiableList(this.estoque);
+  }
+
+  public void add(Produto produto) throws ProdutoInvalidoException {
+    produto.validarParaAdicionar();
+
+    try {
+      var stmt = this.conexao.prepareStatement(COMANDO_ADD);
+      stmt.setString(1, produto.getDescricao());
+      stmt.setDouble(2, produto.getPrecoVenda());
+      stmt.setDouble(3, produto.getPrecoCompra());
+      stmt.setInt(4, produto.getQtdAtual());
+      stmt.setInt(5, produto.getQtdComprada());
+      stmt.setInt(6, produto.getEstoqueMinimo());
+      stmt.execute();
+    } catch (SQLException e) {
+      System.out.println(e);
+    }
+  }
+
+  public void select() {
+        var COMANDO_SELECT = "select * from Produto";
+
+        try {
+            var stmt = this.conexao.prepareStatement(COMANDO_SELECT);
+            var result = stmt.executeQuery();
+
+            while (result.next()) {
+                System.out.println("codigo: " + result.getInt("codigo"));
+                System.out.println("nome: " + result.getString("nome"));
+                System.out.println("descricao: " + result.getString("descricao"));
+                System.out.println("preco_venda: " + result.getDouble("preco_venda"));
+                System.out.println("preco_compra: " + result.getDouble("preco_compra"));
+                System.out.println("qtd_atual: " + result.getInt("qtd_atual"));
+                System.out.println("qtd_vendida: " + result.getInt("qtd_vendida"));
+                System.out.println("qtd_comprada: " + result.getInt("qtd_comprada"));
+                System.out.println("estoque_minimo: " + result.getInt("estoque_minimo"));    
+            }
+        } catch (SQLException e) {
+            System.out.println(e);
+        }
+    }
+
+
+  
+
+  public Produto get(int i) {
+    return this.estoque.get(i);
+  }
+
+  public void remove(int i) {
+    this.estoque.remove(i);
+  }
+
+  public int size() {
+    return this.estoque.size();
+  }
+
+  @Override
+  public Iterator<Produto> iterator() {
+    return this.estoqueImodificavel.iterator();
+  }
+}

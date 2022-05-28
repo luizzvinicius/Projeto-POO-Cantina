@@ -1,15 +1,24 @@
 public class Produto {
+  private static int proximoCodigo = 0;
+
+  private int codigo;
   private String nome, descricao;
   private double precoVenda, precoCompra;
-  private int qtdAtual, qtdComprada, qtdVendida;
+  private int qtdAtual, qtdVendida, qtdComprada, estoqueMinimo;
 
-  public Produto(String nome, String descricao, double precoVenda, double precoCompra, int qtdComprada) {
+  public Produto(String nome, String descricao, double precoVenda, double precoCompra, int qtdComprada, int estoqueMinimo) {
+    this.codigo = proximoCodigo++;
     this.nome = nome;
     this.descricao = descricao;
     this.precoVenda = precoVenda;
     this.precoCompra = precoCompra;
     this.qtdAtual = qtdComprada;
     this.qtdComprada = qtdComprada;
+    this.estoqueMinimo = estoqueMinimo;
+  }
+
+  public int getCodigo() {
+    return this.codigo;
   }
 
   public String getNome() {
@@ -32,12 +41,16 @@ public class Produto {
     return this.qtdAtual;
   }
 
+  public int getQtdVendida() {
+    return this.qtdVendida;
+  }
+
   public int getQtdComprada() {
     return this.qtdComprada;
   }
 
-  public int getQtdVendida() {
-    return this.qtdVendida;
+  public int getEstoqueMinimo() {
+    return this.estoqueMinimo;
   }
 
   public void adicionarQtd(int qtd) {
@@ -54,7 +67,7 @@ public class Produto {
     this.qtdVendida += qtd;
   }
 
-  public void validar() throws ProdutoInvalidoException {
+  public void validarParaAdicionar() throws ProdutoInvalidoException {
     if (this.nome.isBlank()) {
       throw new ProdutoInvalidoException("Nome não pode estar vazio");
     } else if (this.descricao.isBlank()) {

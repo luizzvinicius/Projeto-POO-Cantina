@@ -8,7 +8,14 @@ public class Main {
    * Classe funcionário pra fazer login
    * Funcionário que adiciona produto no estoque
    * Melhorar a função venda
-  */
+   * 
+   * Alterações no modelo:
+   * Nome do produto
+   * quantidade atual
+   * 
+   * alterações no código:
+   * Adicionar ID do produto, get
+   */
 
   private static final String[] DESCRICOES_OPCOES = new String[] {
       "Cadastrar produto", "Vender produto", "Adicionar quantidade ao produto", "Remover produto",
@@ -54,8 +61,8 @@ public class Main {
     }
   }
 
-  private boolean checarQtd() {
-    if (estoque.size() > 0) {
+  private boolean checarQtd(List<Produto> produtos) {
+    if (produtos.size() > 0) {
       return true;
     } else {
       System.out.println("Não há produtos cadastrados no estoque!");
@@ -63,11 +70,12 @@ public class Main {
     }
   }
 
-  private void imprimirProdutosI() {
+  private void imprimirProdutosI(List<Produto> produtos) {
     System.out.println("== Produtos:");
-    for (var i = 0; i < estoque.size(); i++) {
+
+    for (var i = 0; i < produtos.size(); i++) {
       System.out.printf("%d. ", i + 1);
-      imprimirProduto(estoque.get(i));
+      imprimirProduto(produtos.get(i));
     }
   }
 
@@ -84,6 +92,7 @@ public class Main {
     var nome = entrada.lerString("Digite o nome do produto: ");
     var descricao = entrada.lerString("Digite a descrição do produto: ");
     var precoCompra = entrada.lerDoubleValidar("Digite o preço de compra do produto: ");
+    var estoqueMinimo = entrada.lerInt("Digite o estoque mínimo do produto: ");
 
     double precoVenda, precoVendaMin = precoCompra * 1.1;
     while ((precoVenda = entrada.lerDoubleValidar("Digite o preço de venda do produto: ")) < precoVendaMin) {
@@ -91,7 +100,7 @@ public class Main {
     }
 
     var qtdComprada = entrada.lerInt("Digite a quantidade comprada do produto: ");
-    var produto = new Produto(nome, descricao, precoVenda, precoCompra, qtdComprada);
+    var produto = new Produto(nome, descricao, precoVenda, precoCompra, qtdComprada, estoqueMinimo);
     System.out.println();
 
     try {
@@ -103,16 +112,18 @@ public class Main {
   }
 
   private void venderProduto() {
-    if (!checarQtd()) {
+    var produtos = estoque.getProdutos();
+
+    if (!checarQtd(produtos)) {
       return;
     }
 
-    imprimirProdutosI();
+    imprimirProdutosI(produtos);
     Produto produto;
 
     while (true) {
-      var escolha = entrada.lerIndice("Escolha um: ", estoque.size());
-      produto = estoque.get(escolha);
+      var escolha = entrada.lerIndice("Escolha um: ", produtos.size());
+      produto = produtos.get(escolha);
 
       if (produto.getQtdAtual() > 0) {
         break;
@@ -135,13 +146,15 @@ public class Main {
   }
 
   private void adicionarQtd() {
-    if (!checarQtd()) {
+    var produtos = estoque.getProdutos();
+
+    if (!checarQtd(produtos)) {
       return;
     }
 
-    imprimirProdutosI();
-    var escolha = entrada.lerIndice("Escolha um: ", estoque.size());
-    var produto = estoque.get(escolha);
+    imprimirProdutosI(produtos);
+    var escolha = entrada.lerIndice("Escolha um: ", produtos.size());
+    var produto = produtos.get(escolha);
 
     var msg = "Qual a quantidade a ser adicionada? ";
     var qtd = entrada.lerInt(msg);
@@ -149,33 +162,29 @@ public class Main {
   }
 
   private void removerProduto() {
-    if (!checarQtd()) {
+    var produtos = estoque.getProdutos();
+
+    if (!checarQtd(produtos)) {
       return;
     }
 
-    imprimirProdutosI();
-    var escolha = entrada.lerIndice("Escolha um: ", estoque.size());
-    estoque.remove(escolha);
+    imprimirProdutosI(produtos);
+    var escolha = entrada.lerIndice("Escolha um: ", produtos.size());
+    estoque.remove(produtos.get(escolha));
   }
 
   private void resumirEstoque() {
-    if (!checarQtd()) {
-      return;
-    }
-
     System.out.println("== Opcões disponíveis:");
     System.out.println("1. Ordenar pelo nome");
     System.out.println("2. Ordenar pelo descrição");
     System.out.println("3. Ordenar pela quantidade (descrescente)");
     var escolha = entrada.lerIndice("Escolha uma: ", 3);
 
-    var produtos = new ArrayList<Produto>(estoque.size());
-    estoque.iterator().forEachRemaining(produtos::add);
+    var propriedade = escolha == 1 ? "descrição" : "quantidadeDesc";
+    var produtos = estoque.getProdutosOrdenado(propriedade);
 
-    if (escolha == 1) {
-      produtos.sort(Produto::compararPelaDescricao);
-    } else if (escolha == 2) {
-      produtos.sort(Produto::compararPelaQtdDecrescente);
+    if (!checarQtd(produtos)) {
+      return;
     }
 
     System.out.println();
@@ -185,26 +194,30 @@ public class Main {
   }
 
   private void verProdutosEmFalta() {
-    if (!checarQtd()) {
+    var produtos = estoque.getProdutos();
+
+    if (!checarQtd(produtos)) {
       return;
     }
 
-    for (var produto : estoque) {
-      if (produto.getQtdAtual() < 50) {
+    for (var produto : produtos) {
+      if (produto.getQtdAtual() < produto.getEstoqueMinimo()) {
         imprimirProduto(produto);
       }
     }
   }
 
   private void mostrarLucroPrejuizo() {
-    if (!checarQtd()) {
+    var produtos = estoque.getProdutos();
+
+    if (!checarQtd(produtos)) {
       return;
     }
 
     var receitaTotal = 0d;
     var custoTotal = 0d;
 
-    for (var produto : estoque) {
+    for (var produto : estoque.getProdutos()) {
       var receita = produto.getQtdVendida() * produto.getPrecoVenda();
       var custo = produto.getQtdComprada() * produto.getPrecoCompra();
       custoTotal += custo;

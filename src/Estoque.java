@@ -1,37 +1,40 @@
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
-public class Estoque implements Iterable<Produto> {
+public class Estoque {
   private final List<Produto> estoque;
-  private final List<Produto> estoqueImodificavel;
 
   public Estoque() {
     this.estoque = new ArrayList<>();
-    this.estoqueImodificavel = Collections.unmodifiableList(this.estoque);
   }
 
   public void add(Produto produto) throws ProdutoInvalidoException {
-    produto.validar();
+    produto.validarParaAdicionar();
     var i = Collections.binarySearch(this.estoque, produto, Produto::compararPeloNome);
     this.estoque.add(i < 0 ? ~i : i, produto);
   }
 
-  public Produto get(int i) {
-    return this.estoque.get(i);
+  public List<Produto> getProdutos() {
+    return this.getProdutosOrdenado("nome");
   }
 
-  public void remove(int i) {
-    this.estoque.remove(i);
+  public List<Produto> getProdutosOrdenado(String propriedade) {
+    var produtos = new ArrayList<Produto>(estoque.size());
+    estoque.iterator().forEachRemaining(produtos::add);
+
+    if ("nome".equals(propriedade)) {
+      produtos.sort(Produto::compararPeloNome);
+    } else if ("descrição".equals(propriedade)) {
+      produtos.sort(Produto::compararPelaDescricao);
+    } else if ("quantidadeDesc".equals(propriedade)) {
+      produtos.sort(Produto::compararPelaQtdDecrescente);
+    }
+
+    return produtos;
   }
 
-  public int size() {
-    return this.estoque.size();
-  }
-
-  @Override
-  public Iterator<Produto> iterator() {
-    return this.estoqueImodificavel.iterator();
+  public void remove(Produto produto) {
+    this.estoque.remove(produto);
   }
 }

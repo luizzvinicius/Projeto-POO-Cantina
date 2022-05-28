@@ -31,7 +31,7 @@ public class Estoque {
       produtos.sort(Produto::compararPelaQtdDecrescente);
     }
 
-    return produtos;
+    return Collections.unmodifiableList(produtos);
   }
 
   public void remove(Produto produto) {

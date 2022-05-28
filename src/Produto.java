@@ -23,10 +23,10 @@ public class Produto {
   public void venderQtd(int qtd) throws VendaInvalidaException {
     if (qtd > qtdAtual) {
       throw new VendaInvalidaException("Sem itens disponíveis");
+    } else {
+      this.qtdAtual -= qtd;
+      this.qtdVendida += qtd;
     }
-
-    this.qtdAtual -= qtd;
-    this.qtdVendida += qtd;
   }
 
   public void validar() throws ProdutoInvalidoException {

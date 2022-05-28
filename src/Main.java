@@ -33,8 +33,7 @@ public class Main {
     System.out.println("Iniciando...");
 
     while (true) {
-      System.out.println();
-      System.out.println("== Opções disponíveis:");
+      System.out.println("\n== Opções disponíveis:");
 
       var qtdOpcoes = DESCRICOES_OPCOES.length;
       for (var i = 0; i < qtdOpcoes; i++) {
@@ -44,9 +43,8 @@ public class Main {
       var opcao = entrada.lerIndice("Escolha uma: ", qtdOpcoes);
       var func = FUNCS_OPCOES.get(opcao);
 
-      System.out.println();
       func.accept(this);
-      entrada.lerEnter("Aperte Enter para continuar...");
+      entrada.lerEnter("\nAperte Enter para continuar...");
     }
   }
 
@@ -175,9 +173,7 @@ public class Main {
     }
 
     System.out.println();
-    for (var produto : produtos) {
-      imprimirProduto(produto);
-    }
+    produtos.forEach(produto -> imprimirProduto(produto));
   }
 
   private void verProdutosEmFalta() {

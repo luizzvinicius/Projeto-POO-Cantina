@@ -3,7 +3,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class CriadorDeConexao {
-  public static Connection getConexao() {
+  public static Connection criar() {
     try {
       return DriverManager.getConnection("jdbc:mysql://localhost/cantina");
     } catch (SQLException e) {

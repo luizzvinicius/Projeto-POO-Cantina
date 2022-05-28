@@ -1,40 +1,97 @@
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class Estoque {
-  private final List<Produto> estoque;
+  private static final String COMANDO_ADICIONAR = "INSERT INTO Produto" +
+      "(nome, descricao, preco_venda, preco_compra, qtd_atual, qtd_comprada, estoque_minimo)" +
+      "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-  public Estoque() {
-    this.estoque = new ArrayList<>();
+  private static final String COMANDO_ATUALIZAR = "UPDATE PRODUTO SET" +
+      "qtd_atual = ?, qqtd_vendida = ?, qtd_comprada = ? WHERE codigo = ?";
+
+  private static final String COMANDO_GET_PRODUTOS = "SELECT * FROM Produto ORDER BY ? ?";
+  private static final String COMANDO_REMOVER = "DELETE FROM Produto WHERE codigo = ?";
+
+  private final Connection conexao;
+
+  public Estoque(Connection conexao) {
+    this.conexao = conexao;
   }
 
-  public void add(Produto produto) throws ProdutoInvalidoException {
+  public void adicionar(Produto produto) throws ProdutoInvalidoException {
     produto.validarParaAdicionar();
-    var i = Collections.binarySearch(this.estoque, produto, Produto::compararPeloNome);
-    this.estoque.add(i < 0 ? ~i : i, produto);
+
+    try {
+      var stmt = this.conexao.prepareStatement(COMANDO_ADICIONAR);
+      stmt.setString(1, produto.getNome());
+      stmt.setString(2, produto.getDescricao());
+      stmt.setDouble(3, produto.getPrecoVenda());
+      stmt.setDouble(4, produto.getPrecoCompra());
+      stmt.setInt(5, produto.getQtdAtual());
+      stmt.setInt(6, produto.getQtdAtual());
+      stmt.setInt(7, produto.getEstoqueMinimo());
+      stmt.execute();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   public List<Produto> getProdutos() {
-    return this.getProdutosOrdenado("nome");
+    return this.getProdutos("nome", false);
   }
 
-  public List<Produto> getProdutosOrdenado(String propriedade) {
-    var produtos = new ArrayList<Produto>(estoque.size());
-    estoque.iterator().forEachRemaining(produtos::add);
+  public List<Produto> getProdutos(String propriedade, boolean decrescente) {
+    var produtos = new ArrayList<Produto>();
 
-    if ("nome".equals(propriedade)) {
-      produtos.sort(Produto::compararPeloNome);
-    } else if ("descrição".equals(propriedade)) {
-      produtos.sort(Produto::compararPelaDescricao);
-    } else if ("quantidadeDesc".equals(propriedade)) {
-      produtos.sort(Produto::compararPelaQtdDecrescente);
+    try {
+      var stmt = this.conexao.prepareStatement(COMANDO_GET_PRODUTOS);
+      stmt.setString(1, propriedade);
+      stmt.setString(2, decrescente ? "desc" : "asc");
+      var result = stmt.executeQuery();
+
+      while (result.next()) {
+        var codigo = result.getInt("codigo");
+        var nome = result.getString("nome");
+        var descricao = result.getString("descricao");
+        var precoVenda = result.getDouble("preco_venda");
+        var precoCompra = result.getDouble("preco_compra");
+        var qtdAtual = result.getInt("qtd_atual");
+        var qtdVendida = result.getInt("qtd_vendida");
+        var qtdComprada = result.getInt("qtd_comprada");
+        var estoqueMinimo = result.getInt("estoque_minimo");
+
+        var produto = new Produto(codigo, nome, descricao, precoVenda, precoCompra, qtdAtual, qtdVendida, qtdComprada,
+            estoqueMinimo);
+        produtos.add(produto);
+      }
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
     }
-
-    return Collections.unmodifiableList(produtos);
+    return produtos;
   }
 
-  public void remove(Produto produto) {
-    this.estoque.remove(produto);
+  public void atualizar(Produto produto) {
+    try {
+      var stmt = this.conexao.prepareStatement(COMANDO_ATUALIZAR);
+      stmt.setInt(1, produto.getQtdAtual());
+      stmt.setInt(2, produto.getQtdVendida());
+      stmt.setInt(3, produto.getQtdComprada());
+      stmt.setInt(4, produto.getCodigo());
+      stmt.execute();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
+  }
+
+  public void remover(Produto produto) {
+    try {
+      var stmt = this.conexao.prepareStatement(COMANDO_REMOVER);
+      stmt.setInt(1, produto.getCodigo());
+      stmt.execute();
+    } catch (SQLException e) {
+      throw new RuntimeException(e);
+    }
   }
 }

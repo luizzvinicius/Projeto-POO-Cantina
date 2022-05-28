@@ -6,15 +6,8 @@ public class Main {
    * Adicionar:
    * Classe funcionário pra fazer login
    * Funcionário que adiciona produto no estoque
-   * Melhorar a função venda
-   * 
-   * Alterações no modelo:
-   * Nome do produto
-   * quantidade atual
-   * 
-   * alterações no código:
-   * Adicionar ID do produto, get
-   */
+   * Adicionar método de pagamento
+  */
 
   private static final String[] DESCRICOES_OPCOES = new String[] {
       "Cadastrar produto", "Vender produto", "Adicionar quantidade ao produto", "Remover produto",
@@ -35,7 +28,7 @@ public class Main {
   }
 
   private Main(Entrada entrada) {
-    this.estoque = new Estoque();
+    this.estoque = new Estoque(CriadorDeConexao.criar());
     this.entrada = entrada;
   }
 
@@ -91,7 +84,6 @@ public class Main {
     var nome = entrada.lerString("Digite o nome do produto: ");
     var descricao = entrada.lerString("Digite a descrição do produto: ");
     var precoCompra = entrada.lerDoubleValidar("Digite o preço de compra do produto: ");
-    var estoqueMinimo = entrada.lerInt("Digite o estoque mínimo do produto: ");
 
     double precoVenda, precoVendaMin = precoCompra * 1.1;
     while ((precoVenda = entrada.lerDoubleValidar("Digite o preço de venda do produto: ")) < precoVendaMin) {
@@ -99,11 +91,12 @@ public class Main {
     }
 
     var qtdComprada = entrada.lerInt("Digite a quantidade comprada do produto: ");
+    var estoqueMinimo = entrada.lerInt("Digite o estoque mínimo do produto: ");
     var produto = new Produto(nome, descricao, precoVenda, precoCompra, qtdComprada, estoqueMinimo);
     System.out.println();
 
     try {
-      estoque.add(produto);
+      estoque.adicionar(produto);
       System.out.println("O produto foi cadastrado com sucesso");
     } catch (ProdutoInvalidoException e) {
       System.out.println("Não foi possível cadastrar o produto: " + e.getMessage() + "!");
@@ -139,6 +132,7 @@ public class Main {
 
     try {
       produto.venderQtd(qtd);
+      estoque.atualizar(produto);
     } catch (VendaInvalidaException e) {
       System.out.println("Não foi possível vender o produto: " + e.getMessage() + "!");
     }
@@ -158,6 +152,7 @@ public class Main {
     var msg = "Qual a quantidade a ser adicionada? ";
     var qtd = entrada.lerInt(msg);
     produto.adicionarQtd(qtd);
+    estoque.atualizar(produto);
   }
 
   private void removerProduto() {
@@ -169,7 +164,8 @@ public class Main {
 
     imprimirProdutosI(produtos);
     var escolha = entrada.lerIndice("Escolha um: ", produtos.size());
-    estoque.remove(produtos.get(escolha));
+    estoque.remover(produtos.get(escolha));
+    System.out.println("Produto removido com sucesso");
   }
 
   private void resumirEstoque() {
@@ -179,8 +175,19 @@ public class Main {
     System.out.println("3. Ordenar pela quantidade (descrescente)");
     var escolha = entrada.lerIndice("Escolha uma: ", 3);
 
-    var propriedade = escolha == 1 ? "descrição" : "quantidadeDesc";
-    var produtos = estoque.getProdutosOrdenado(propriedade);
+    String propriedade = null;
+    var decrescente = false;
+
+    if (escolha == 0) {
+      propriedade = "nome";
+    } else if (escolha == 1) {
+      propriedade = "descricao";
+    } else if (escolha == 2) {
+      propriedade = "qtd_atual";
+      decrescente = true;
+    }
+
+    var produtos = estoque.getProdutos(propriedade, decrescente);
 
     if (!checarQtd(produtos)) {
       return;

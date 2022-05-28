@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS Venda (
     total_venda decimal(5, 2),
     desconto decimal(5, 2),
     PRIMARY KEY (codigo),
-    FOREIGN KEY (email_func) REFERENCES funcionario (email)
+    FOREIGN KEY (email_func) REFERENCES Funcionario (email)
 );
 CREATE TABLE IF NOT EXISTS Item (
     codigo int(8),
@@ -41,6 +41,6 @@ CREATE TABLE IF NOT EXISTS Item (
     qtdidade int(8),
     preco decimal(5, 2),
     PRIMARY KEY (codigo),
-    FOREIGN KEY (cod_venda) REFERENCES venda (codigo),
-    FOREIGN KEY (cod_produto) REFERENCES produto (cod_produto)
+    FOREIGN KEY (cod_venda) REFERENCES Venda (codigo),
+    FOREIGN KEY (cod_produto) REFERENCES Produto (codigo)
 );

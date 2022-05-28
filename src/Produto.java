@@ -1,13 +1,24 @@
 public class Produto {
-  private static int proximoCodigo = 0;
-
   private int codigo;
   private String nome, descricao;
   private double precoVenda, precoCompra;
   private int qtdAtual, qtdVendida, qtdComprada, estoqueMinimo;
 
-  public Produto(String nome, String descricao, double precoVenda, double precoCompra, int qtdComprada, int estoqueMinimo) {
-    this.codigo = proximoCodigo++;
+  public Produto(int codigo, String nome, String descricao, double precoVenda, double precoCompra, int qtdAtual,
+      int qtdVendida, int qtdComprada, int estoqueMinimo) {
+    this.codigo = codigo;
+    this.nome = nome;
+    this.descricao = descricao;
+    this.precoVenda = precoVenda;
+    this.precoCompra = precoCompra;
+    this.qtdAtual = qtdAtual;
+    this.qtdVendida = qtdVendida;
+    this.qtdComprada = qtdComprada;
+    this.estoqueMinimo = estoqueMinimo;
+  }
+
+  public Produto(String nome, String descricao, double precoVenda, double precoCompra, int qtdComprada,
+      int estoqueMinimo) {
     this.nome = nome;
     this.descricao = descricao;
     this.precoVenda = precoVenda;
@@ -15,42 +26,6 @@ public class Produto {
     this.qtdAtual = qtdComprada;
     this.qtdComprada = qtdComprada;
     this.estoqueMinimo = estoqueMinimo;
-  }
-
-  public int getCodigo() {
-    return this.codigo;
-  }
-
-  public String getNome() {
-    return this.nome;
-  }
-
-  public String getDescricao() {
-    return this.descricao;
-  }
-
-  public double getPrecoVenda() {
-    return this.precoVenda;
-  }
-
-  public double getPrecoCompra() {
-    return this.precoCompra;
-  }
-
-  public int getQtdAtual() {
-    return this.qtdAtual;
-  }
-
-  public int getQtdVendida() {
-    return this.qtdVendida;
-  }
-
-  public int getQtdComprada() {
-    return this.qtdComprada;
-  }
-
-  public int getEstoqueMinimo() {
-    return this.estoqueMinimo;
   }
 
   public void adicionarQtd(int qtd) {
@@ -91,5 +66,41 @@ public class Produto {
 
   public static int compararPelaQtdDecrescente(Produto p1, Produto p2) {
     return p2.getQtdAtual() - p1.getQtdAtual();
+  }
+
+  public int getCodigo() {
+    return this.codigo;
+  }
+
+  public String getNome() {
+    return this.nome;
+  }
+
+  public String getDescricao() {
+    return this.descricao;
+  }
+
+  public double getPrecoVenda() {
+    return this.precoVenda;
+  }
+
+  public double getPrecoCompra() {
+    return this.precoCompra;
+  }
+
+  public int getQtdAtual() {
+    return this.qtdAtual;
+  }
+
+  public int getQtdVendida() {
+    return this.qtdVendida;
+  }
+
+  public int getQtdComprada() {
+    return this.qtdComprada;
+  }
+
+  public int getEstoqueMinimo() {
+    return this.estoqueMinimo;
   }
 }

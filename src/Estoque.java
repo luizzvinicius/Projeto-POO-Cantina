@@ -3,8 +3,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import exceptions.ProdutoInvalidoException;
-
 public class Estoque implements Iterable<Produto> {
   private final List<Produto> estoque;
   private final List<Produto> estoqueImodificavel;

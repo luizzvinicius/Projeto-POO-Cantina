@@ -3,6 +3,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import exceptions.ProdutoInvalidoException;
+
 public class ProdutoDao {
   private static final String COMANDO_ADICIONAR = "INSERT INTO Produto " +
       "(nome, descricao, preco_venda, preco_compra, qtd_atual, qtd_comprada, estoque_minimo)" +

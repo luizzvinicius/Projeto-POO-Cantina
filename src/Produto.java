@@ -1,3 +1,6 @@
+import exceptions.ProdutoInvalidoException;
+import exceptions.VendaInvalidaException;
+
 public class Produto {
   private int codigo;
   private String nome, descricao;

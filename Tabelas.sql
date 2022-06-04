@@ -9,8 +9,8 @@ CREATE TABLE IF NOT EXISTS Produto (
     codigo int(8) AUTO_INCREMENT,
     nome varchar(30),
     descricao varchar(30),
-    preco_venda decimal(5, 2),
-    preco_compra decimal(5, 2),
+    preco_venda decimal(10, 2),
+    preco_compra decimal(10, 2),
     qtd_atual int(8),
     qtd_vendida int(8),
     qtd_comprada int(8),
@@ -29,8 +29,8 @@ CREATE TABLE IF NOT EXISTS Venda (
     data_venda date,
     email_func varchar(30),
     forma_pagamento varchar(30),
-    total_venda decimal(5, 2),
-    desconto decimal(5, 2),
+    total_venda decimal(10, 2),
+    desconto decimal(10, 2),
     PRIMARY KEY (codigo),
     FOREIGN KEY (email_func) REFERENCES Funcionario (email)
 );
@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS Item (
     cod_venda int(8),
     cod_produto int(8),
     qtdidade int(8),
-    preco decimal(5, 2),
+    preco decimal(10, 2),
     PRIMARY KEY (codigo),
     FOREIGN KEY (cod_venda) REFERENCES Venda (codigo),
     FOREIGN KEY (cod_produto) REFERENCES Produto (codigo)

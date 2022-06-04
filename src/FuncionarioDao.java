@@ -1,5 +1,6 @@
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 
 public class FuncionarioDao {
   private static final String COMANDO_CADASTRAR = "INSERT INTO Funcionario " +
@@ -13,13 +14,15 @@ public class FuncionarioDao {
     this.conexao = conexao;
   }
 
-  public void cadastrar(Funcionario funcionario) {
+  public void cadastrar(Funcionario funcionario) throws FuncionarioJaCadastradoException{
     try {
       var stmt = this.conexao.prepareStatement(COMANDO_CADASTRAR);
       stmt.setString(1, funcionario.getEmail());
       stmt.setString(2, funcionario.getNome());
       stmt.setString(3, funcionario.getSenha());
       stmt.execute();
+    } catch (SQLIntegrityConstraintViolationException e) {
+      throw new FuncionarioJaCadastradoException(e);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

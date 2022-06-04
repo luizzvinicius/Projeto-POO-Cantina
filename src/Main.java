@@ -2,21 +2,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Main {
-  /**
-   * Adicionar:
-   * Funcionário que adiciona produto no estoque
-   */
+import exceptions.ProdutoInvalidoException;
+import exceptions.VendaInvalidaException;
 
+public class Main {
   private static final String[] DESCRICOES_OPCOES = new String[] {
       "Cadastrar produto", "Vender produto", "Adicionar quantidade ao produto",
       "Remover produto", "Resumir estoque", "Ver produtos em falta", "Mostrar lucro/prejuízo",
       "Sair do programa"
-    };
-    
+  };
+
   private static final List<Consumer<Main>> FUNCS_OPCOES = List.of(
       Main::cadastrarProduto, Main::venderProduto, Main::adicionarQtd, Main::removerProduto,
       Main::resumirEstoque, Main::verProdutosEmFalta, Main::mostrarLucroPrejuizo, Main::sairDoPrograma);
+
+  private static final String[] DESCRICOES_OPCOES_FUNCIONARIOS = new String[] {
+      "Entrar", "Cadastrar", "Sair do programa"
+  };
+
+  private static final List<Consumer<Main>> FUNCS_OPCOES_FUNCIONARIOS = List.of(
+      Main::entrar, Main::cadastrar, Main::sairDoPrograma);
 
   private final Entrada entrada;
   private final ProdutoDao estoque;
@@ -38,26 +43,34 @@ public class Main {
 
   private void rodar() {
     System.out.println("Bem-vindo a Cantina do IFAL!");
-    this.cadastrar();
-    this.login();
+
+    while (this.nomeFuncionario == null) {
+      rodarUmaOpcao(DESCRICOES_OPCOES_FUNCIONARIOS, FUNCS_OPCOES_FUNCIONARIOS);
+    }
+
+    System.out.println();
+    System.out.println("Logado como " + this.nomeFuncionario);
 
     while (true) {
-      System.out.println();
-      System.out.println("Logado como " + this.nomeFuncionario);
-      System.out.println("== Opções disponíveis:");
-
-      var qtdOpcoes = DESCRICOES_OPCOES.length;
-      for (var i = 0; i < qtdOpcoes; i++) {
-        System.out.printf("%d. %s\n", i + 1, DESCRICOES_OPCOES[i]);
-      }
-
-      var opcao = entrada.lerIndice("Escolha uma: ", qtdOpcoes);
-      var func = FUNCS_OPCOES.get(opcao);
-
-      System.out.println();
-      func.accept(this);
-      entrada.lerEnter("Aperte Enter para continuar...");
+      rodarUmaOpcao(DESCRICOES_OPCOES, FUNCS_OPCOES);
     }
+  }
+
+  private void rodarUmaOpcao(String[] descricoes, List<Consumer<Main>> funcoes) {
+    System.out.println("== Opções disponíveis:");
+
+    var qtdOpcoes = descricoes.length;
+    for (var i = 0; i < qtdOpcoes; i++) {
+      System.out.printf("%d. %s\n", i + 1, descricoes[i]);
+    }
+
+    var opcao = entrada.lerIndice("Escolha uma: ", qtdOpcoes);
+    var func = funcoes.get(opcao);
+
+    System.out.println();
+    func.accept(this);
+    System.out.println();
+    entrada.lerEnter("Aperte Enter para continuar...");
   }
 
   private boolean checarQtd(List<Produto> produtos) {
@@ -87,6 +100,31 @@ public class Main {
     System.out.printf(msg, nome, descricao, precoVenda, qtdAtual);
   }
 
+  private void cadastrar() {
+    var nome = this.entrada.lerString("Digite o nome do usuário: ");
+    var email = this.entrada.lerString("Digite o email do usuário: ");
+    var senha = this.entrada.lerString("Digite a senha: ");
+    var funcionario = new Funcionario(nome, email, senha);
+
+    try {
+      this.funcionarios.cadastrar(funcionario);
+    } catch (FuncionarioJaCadastradoException e) {
+      System.out.println("Esse email já está cadastrado");
+    }
+  }
+
+  private void entrar() {
+    var email = this.entrada.lerString("Digite o email do funcionário: ");
+    var senha = this.entrada.lerString("Digite a senha: ");
+    var nome = this.funcionarios.login(email, senha);
+
+    if (nome != null) {
+      this.nomeFuncionario = nome;
+    } else {
+      System.out.println("Email ou senha inexistentes ou incorretos");
+    }
+  }
+
   private void cadastrarProduto() {
     var nome = entrada.lerString("Digite o nome do produto: ");
     var descricao = entrada.lerString("Digite a descrição do produto: ");
@@ -106,26 +144,14 @@ public class Main {
       estoque.adicionar(produto);
       System.out.println("O produto foi cadastrado com sucesso");
     } catch (ProdutoInvalidoException e) {
-      System.out.println("Não foi possível cadastrar o produto: " + e.getMessage() + "!");
+      System.out.printf("Não foi possível cadastrar o produto: %s!\n", e.getMessage());
     }
   }
-
-  private String formaPagamento() {
-    var pagamentos = new String[] { "Dinheiro", "Cartão de crédito", "Cartão de débito", "Pix" };
-    
-    for (var i = 0; i < pagamentos.length; i++) {
-      System.out.printf("%d. %s.\n", i + 1, pagamentos[i]);
-    }
-    
-    var escolha = entrada.lerIndice("Escolha uma forma de pagamento: ", pagamentos.length);
-    return pagamentos[escolha];
-  }
-  
 
   private void venderProduto() {
     var produtos = new ArrayList<Produto>();
 
-    for (var produto : estoque.getProdutos()) {
+    for (var produto : this.estoque.getProdutos()) {
       if (produto.getQtdAtual() > 0) {
         produtos.add(produto);
       }
@@ -154,7 +180,7 @@ public class Main {
 
     try {
       var pagamento = formaPagamento();
-      
+
       if (pagamento.equals("Dinheiro")) {
         var dinheiro = 0d;
 
@@ -167,22 +193,33 @@ public class Main {
             break;
           }
         }
-        
+
         if (dinheiro > produto.getPrecoVenda()) {
           var troco = dinheiro - produto.getPrecoVenda();
           System.out.println("Troco: R$" + troco);
         }
-
-      } else if (pagamento.equals("Cartão de crédito") || pagamento.equals("Cartão de débito") || pagamento.equals("Pix")) {
+      } else {
         System.out.println("Pagamento realizado com sucesso!");
       }
 
-      System.out.printf("\nVendendo %d %s\n", qtd, produto.getNome());
+      System.out.println();
+      System.out.printf("Vendendo %d %s\n", qtd, produto.getNome());
       produto.venderQtd(qtd);
       estoque.atualizar(produto);
     } catch (VendaInvalidaException e) {
       System.out.println("Não foi possível vender o produto: " + e.getMessage() + "!");
     }
+  }
+
+  private String formaPagamento() {
+    var pagamentos = new String[] { "Dinheiro", "Cartão de crédito", "Cartão de débito", "Pix" };
+
+    for (var i = 0; i < pagamentos.length; i++) {
+      System.out.printf("%d. %s.\n", i + 1, pagamentos[i]);
+    }
+
+    var escolha = entrada.lerIndice("Escolha uma forma de pagamento: ", pagamentos.length);
+    return pagamentos[escolha];
   }
 
   private void adicionarQtd() {
@@ -284,29 +321,6 @@ public class Main {
     var lucroTotal = receitaTotal - custoTotal;
     var msg = lucroTotal > 0 ? "lucro" : "prejuízo";
     System.out.printf("Houve um %s total de R$ %.2f\n", msg, Math.abs(lucroTotal));
-  }
-
-  private void cadastrar() {
-    var nome = this.entrada.lerString("Digite o nome do usuário: ");
-    var email = this.entrada.lerString("Digite o email do usuário: ");
-    var senha = this.entrada.lerString("Digite a senha: ");
-    var funcionario = new Funcionario(nome, email, senha);
-    this.funcionarios.cadastrar(funcionario);
-  }
-
-  private void login() {
-    while (true) {
-      var email = this.entrada.lerString("Digite o email do funcionaŕio: ");
-      var senha = this.entrada.lerString("Digite a senha: ");
-      var nome = this.funcionarios.login(email, senha);
-
-      if (nome != null) {
-        this.nomeFuncionario = nome;
-        break;
-      } else {
-        System.out.println("Email ou senha inexistentes ou incorretos");
-      }
-    }
   }
 
   private void sairDoPrograma() {

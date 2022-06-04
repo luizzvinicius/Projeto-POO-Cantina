@@ -3,20 +3,20 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Estoque {
-  private static final String COMANDO_ADICIONAR = "INSERT INTO Produto" +
+public class ProdutoDao {
+  private static final String COMANDO_ADICIONAR = "INSERT INTO Produto " +
       "(nome, descricao, preco_venda, preco_compra, qtd_atual, qtd_comprada, estoque_minimo)" +
       "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-  private static final String COMANDO_ATUALIZAR = "UPDATE PRODUTO SET" +
-      "qtd_atual = ?, qqtd_vendida = ?, qtd_comprada = ? WHERE codigo = ?";
+  private static final String COMANDO_ATUALIZAR = "UPDATE PRODUTO SET " +
+      "qtd_atual = ?, qtd_vendida = ?, qtd_comprada = ? WHERE codigo = ?";
 
   private static final String COMANDO_GET_PRODUTOS = "SELECT * FROM Produto ORDER BY ? ?";
   private static final String COMANDO_REMOVER = "DELETE FROM Produto WHERE codigo = ?";
 
   private final Connection conexao;
 
-  public Estoque(Connection conexao) {
+  public ProdutoDao(Connection conexao) {
     this.conexao = conexao;
   }
 

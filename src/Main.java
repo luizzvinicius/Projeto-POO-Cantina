@@ -278,9 +278,7 @@ public class Main {
     }
 
     System.out.println();
-    for (var produto : produtos) {
-      imprimirProduto(produto);
-    }
+    produtos.forEach(produto -> imprimirProduto(produto));
   }
 
   private void verProdutosEmFalta() {
@@ -290,11 +288,11 @@ public class Main {
       return;
     }
 
-    for (var produto : produtos) {
+    produtos.forEach(produto -> {
       if (produto.getQtdAtual() < produto.getEstoqueMinimo()) {
         imprimirProduto(produto);
       }
-    }
+    });
   }
 
   private void mostrarLucroPrejuizo() {

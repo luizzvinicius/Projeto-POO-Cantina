@@ -1,62 +1,52 @@
-import java.util.Scanner;
+import javax.swing.JOptionPane;
 
-public class Entrada implements AutoCloseable {
-  private final Scanner scanner;
+public class Entrada {
+  private Tela tela;
 
-  public Entrada() {
-    this.scanner = new Scanner(System.in);
-  }
-
-  @Override
-  public void close() {
-    this.scanner.close();
+  public Entrada(Tela tela) {
+    this.tela = tela;
   }
 
   public String lerString(String msg) {
-    while (true) {
-      System.out.print(msg);
-      var entrada = this.scanner.nextLine().strip();
+    var entrada = "";
+    var initialType = JOptionPane.QUESTION_MESSAGE;
 
-      if (!entrada.isEmpty() && Character.isLetter(entrada.charAt(0))) {
-        return entrada;
-      } else {
-        System.out.println("Entrada inválida!");
-      }
-    }
+    do {
+      entrada = JOptionPane.showInputDialog(this.tela, msg, "Entrada", initialType);
+      initialType = JOptionPane.ERROR_MESSAGE;
+    } while (entrada.isEmpty() || !Character.isLetter(entrada.charAt(0)));
+
+    return entrada;
   }
 
   public int lerInt(String msg) {
-    while (true) {
-      System.out.print(msg);
-      var entrada = this.scanner.nextLine();
+    var entrada = -1;
+    var initialType = JOptionPane.QUESTION_MESSAGE;
 
+    do {
       try {
-        return Integer.parseInt(entrada);
+        entrada = Integer.parseUnsignedInt(JOptionPane.showInputDialog(this.tela, msg, "Entrada", initialType));
       } catch (NumberFormatException e) {
-        System.out.println("Entrada inválida!");
+        initialType = JOptionPane.ERROR_MESSAGE;
       }
-    }
+    } while (entrada == -1);
+
+    return entrada;
   }
 
   public int lerIntValidar(String msg, int min, int max) {
-    while (true) {
-      System.out.print(msg);
-      var entrada = this.scanner.nextLine();
-      int numero;
+    var entrada = -1;
+    var initialType = JOptionPane.QUESTION_MESSAGE;
 
+    do {
       try {
-        numero = Integer.parseInt(entrada);
+        entrada = Integer.parseUnsignedInt(JOptionPane.showInputDialog(this.tela, msg, "Entrada", initialType));
       } catch (NumberFormatException e) {
-        System.out.println("Entrada inválida!");
-        continue;
+        initialType = JOptionPane.ERROR_MESSAGE;
       }
+    } while (entrada < min || entrada > max);
 
-      if (numero >= min && numero <= max) {
-        return numero;
-      } else {
-        System.out.println("Entrada inválida!");
-      }
-    }
+    return entrada;
   }
 
   public int lerIndice(String msg, int max) {
@@ -64,23 +54,17 @@ public class Entrada implements AutoCloseable {
   }
 
   public double lerDoubleValidar(String msg) {
-    while (true) {
-      System.out.print(msg);
-      var entrada = this.scanner.nextLine();
-      double numero;
+    var entrada = -1d;
+    var initialType = JOptionPane.QUESTION_MESSAGE;
 
+    do {
       try {
-        numero = Double.parseDouble(entrada);
+        entrada = Double.parseDouble(JOptionPane.showInputDialog(this.tela, msg, "Entrada", initialType));
       } catch (NumberFormatException e) {
-        System.out.println("Entrada inválida!");
-        continue;
+        initialType = JOptionPane.ERROR_MESSAGE;
       }
+    } while (entrada < 0);
 
-      if (numero >= 0) {
-        return numero;
-      } else {
-        System.out.println("Entrada inválida!");
-      }
-    }
+    return entrada;
   }
 }

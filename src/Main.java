@@ -1,74 +1,79 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
+import java.io.PrintStream;
 
 import exceptions.ProdutoInvalidoException;
 import exceptions.VendaInvalidaException;
 
 public class Main {
-  private static final String[] DESCRICOES_OPCOES = new String[] {
+  public static final String[] DESCRICOES_OPCOES = new String[] {
       "Cadastrar produto", "Vender produto", "Adicionar quantidade ao produto",
       "Remover produto", "Resumir estoque", "Ver produtos em falta", "Mostrar lucro/prejuízo",
       "Sair do programa"
   };
 
-  private static final List<Consumer<Main>> FUNCS_OPCOES = List.of(
+  public static final Opcao[] FUNCS_OPCOES = new Opcao[] {
       Main::cadastrarProduto, Main::venderProduto, Main::adicionarQtd, Main::removerProduto,
-      Main::resumirEstoque, Main::verProdutosEmFalta, Main::mostrarLucroPrejuizo, Main::sairDoPrograma);
+      Main::resumirEstoque, Main::verProdutosEmFalta, Main::mostrarLucroPrejuizo, Main::sairDoPrograma
+  };
 
   private static final String[] DESCRICOES_OPCOES_FUNCIONARIOS = new String[] {
       "Entrar", "Cadastrar", "Sair do programa"
   };
 
-  private static final List<Consumer<Main>> FUNCS_OPCOES_FUNCIONARIOS = List.of(
-      Main::entrar, Main::cadastrar, Main::sairDoPrograma);
+  private static final Opcao[] FUNCS_OPCOES_FUNCIONARIOS = new Opcao[] {
+      Main::entrar, Main::cadastrar, Main::sairDoPrograma
+  };
 
   private final Entrada entrada;
+  private final PrintStream out;
   private final ProdutoDao estoque;
   private final FuncionarioDao funcionarios;
   private String nomeFuncionario;
 
   public static void main(String[] args) {
     try (var entrada = new Entrada()) {
-      new Main(entrada).rodar();
+      new Tela();
+      //new Main(entrada, this.out).rodar();
     }
   }
 
-  private Main(Entrada entrada) {
+  public Main(Entrada entrada, PrintStream out) {
     this.entrada = entrada;
+    this.out = out;
     var conexao = CriadorDeConexao.criar();
     this.estoque = new ProdutoDao(conexao);
     this.funcionarios = new FuncionarioDao(conexao);
   }
 
   private void rodar() {
-    System.out.println("Bem-vindo a Cantina do IFAL!");
+    this.out.println("Bem-vindo a Cantina do IFAL!");
 
     while (this.nomeFuncionario == null) {
       rodarUmaOpcao(DESCRICOES_OPCOES_FUNCIONARIOS, FUNCS_OPCOES_FUNCIONARIOS);
     }
 
-    System.out.printf("\nLogado como: %s\n", this.nomeFuncionario);
+    this.out.printf("\nLogado como: %s\n", this.nomeFuncionario);
 
     while (true) {
       rodarUmaOpcao(DESCRICOES_OPCOES, FUNCS_OPCOES);
     }
   }
 
-  private void rodarUmaOpcao(String[] descricoes, List<Consumer<Main>> funcoes) {
-    System.out.println("== Opções disponíveis:");
+  private void rodarUmaOpcao(String[] descricoes, Opcao[] funcoes) {
+    this.out.println("== Opções disponíveis:");
 
     var qtdOpcoes = descricoes.length;
     for (var i = 0; i < qtdOpcoes; i++) {
-      System.out.printf("%d. %s\n", i + 1, descricoes[i]);
+      this.out.printf("%d. %s\n", i + 1, descricoes[i]);
     }
 
     var opcao = entrada.lerIndice("Escolha uma: ", qtdOpcoes);
-    var func = funcoes.get(opcao);
+    var func = funcoes[opcao];
 
-    System.out.println();
+    this.out.println();
     func.accept(this);
-    System.out.println();
+    this.out.println();
     entrada.lerEnter("Aperte Enter para continuar...");
   }
 
@@ -76,16 +81,16 @@ public class Main {
     if (produtos.size() > 0) {
       return true;
     } else {
-      System.out.println("Não há produtos disponíveis no estoque!");
+      this.out.println("Não há produtos disponíveis no estoque!");
       return false;
     }
   }
 
   private void imprimirProdutosI(List<Produto> produtos) {
-    System.out.println("== Produtos:");
+    this.out.println("== Produtos:");
 
     for (var i = 0; i < produtos.size(); i++) {
-      System.out.printf("%d. ", i + 1);
+      this.out.printf("%d. ", i + 1);
       imprimirProduto(produtos.get(i));
     }
   }
@@ -96,7 +101,7 @@ public class Main {
     var descricao = produto.getDescricao();
     var qtdAtual = produto.getQtdAtual();
     var precoVenda = produto.getPrecoVenda();
-    System.out.printf(msg, nome, descricao, precoVenda, qtdAtual);
+    this.out.printf(msg, nome, descricao, precoVenda, qtdAtual);
   }
 
   private void cadastrar() {
@@ -108,7 +113,7 @@ public class Main {
     try {
       this.funcionarios.cadastrar(funcionario);
     } catch (FuncionarioJaCadastradoException e) {
-      System.out.println("Esse email já está cadastrado");
+      this.out.println("Esse email já está cadastrado");
     }
   }
 
@@ -120,7 +125,7 @@ public class Main {
     if (nome != null) {
       this.nomeFuncionario = nome;
     } else {
-      System.out.println("Email ou senha inexistentes ou incorretos");
+      this.out.println("Email ou senha inexistentes ou incorretos");
     }
   }
 
@@ -131,19 +136,19 @@ public class Main {
 
     double precoVenda, precoVendaMin = precoCompra * 1.1;
     while ((precoVenda = entrada.lerDoubleValidar("Digite o preço de venda do produto: ")) < precoVendaMin) {
-      System.out.println("O preço da venda precisa ser maior que o preço da compra!");
+      this.out.println("O preço da venda precisa ser maior que o preço da compra!");
     }
 
     var qtdComprada = entrada.lerInt("Digite a quantidade comprada do produto: ");
     var estoqueMinimo = entrada.lerInt("Digite o estoque mínimo do produto: ");
     var produto = new Produto(nome, descricao, precoVenda, precoCompra, qtdComprada, estoqueMinimo);
-    System.out.println();
+    this.out.println();
 
     try {
       estoque.adicionar(produto);
-      System.out.println("O produto foi cadastrado com sucesso");
+      this.out.println("O produto foi cadastrado com sucesso");
     } catch (ProdutoInvalidoException e) {
-      System.out.printf("Não foi possível cadastrar o produto: %s!\n", e.getMessage());
+      this.out.printf("Não foi possível cadastrar o produto: %s!\n", e.getMessage());
     }
   }
 
@@ -170,7 +175,7 @@ public class Main {
       if (produto.getQtdAtual() > 0) {
         break;
       } else {
-        System.out.println("O produto está sem itens disponíveis!");
+        this.out.println("O produto está sem itens disponíveis!");
       }
     }
 
@@ -187,7 +192,7 @@ public class Main {
           dinheiro = entrada.lerDoubleValidar("Digite quanto vai ser pago: ");
 
           if (dinheiro < produto.getPrecoVenda()) {
-            System.out.println("Valor inválido!");
+            this.out.println("Valor inválido!");
           } else {
             break;
           }
@@ -195,17 +200,17 @@ public class Main {
 
         if (dinheiro > produto.getPrecoVenda()) {
           var troco = dinheiro - produto.getPrecoVenda();
-          System.out.printf("Troco de R$ %2f\n", troco);
+          this.out.printf("Troco de R$ %2f\n", troco);
         }
       } else {
-        System.out.println("Pagamento realizado com sucesso!");
+        this.out.println("Pagamento realizado com sucesso!");
       }
 
-      System.out.printf("\nVendendo %d %s\n", qtd, produto.getNome());
+      this.out.printf("\nVendendo %d %s\n", qtd, produto.getNome());
       produto.venderQtd(qtd);
       estoque.atualizar(produto);
     } catch (VendaInvalidaException e) {
-      System.out.printf("Não foi possível vender o produto: %s!", e.getMessage());
+      this.out.printf("Não foi possível vender o produto: %s!", e.getMessage());
     }
   }
 
@@ -213,7 +218,7 @@ public class Main {
     var pagamentos = new String[] { "Dinheiro", "Cartão de crédito", "Cartão de débito", "Pix" };
 
     for (var i = 0; i < pagamentos.length; i++) {
-      System.out.printf("%d. %s.\n", i + 1, pagamentos[i]);
+      this.out.printf("%d. %s.\n", i + 1, pagamentos[i]);
     }
 
     var escolha = entrada.lerIndice("Escolha uma forma de pagamento: ", pagamentos.length);
@@ -247,14 +252,14 @@ public class Main {
     imprimirProdutosI(produtos);
     var escolha = entrada.lerIndice("Escolha um: ", produtos.size());
     estoque.remover(produtos.get(escolha));
-    System.out.println("Produto removido com sucesso");
+    this.out.println("Produto removido com sucesso");
   }
 
   private void resumirEstoque() {
-    System.out.println("== Opcões disponíveis:");
-    System.out.println("1. Ordenar pelo nome");
-    System.out.println("2. Ordenar pelo descrição");
-    System.out.println("3. Ordenar pela quantidade (descrescente)");
+    this.out.println("== Opcões disponíveis:");
+    this.out.println("1. Ordenar pelo nome");
+    this.out.println("2. Ordenar pelo descrição");
+    this.out.println("3. Ordenar pela quantidade (descrescente)");
     var escolha = entrada.lerIndice("Escolha uma: ", 3);
 
     String propriedade = null;
@@ -275,7 +280,7 @@ public class Main {
       return;
     }
 
-    System.out.println();
+    this.out.println();
     produtos.forEach(produto -> imprimirProduto(produto));
   }
 
@@ -293,7 +298,7 @@ public class Main {
     });
   }
 
-  private void mostrarLucroPrejuizo() {
+  public void mostrarLucroPrejuizo() {
     var produtos = estoque.getProdutos();
 
     if (!checarQtd(produtos)) {
@@ -311,16 +316,21 @@ public class Main {
 
       var lucro = receita - custo;
       var msg = lucro > 0 ? "lucro" : "prejuízo";
-      System.out.printf("%s deu um %s de R$ %.2f\n", produto.getNome(), msg, Math.abs(lucro));
+      this.out.printf("%s deu um %s de R$ %.2f\n", produto.getNome(), msg, Math.abs(lucro));
     }
 
     var lucroTotal = receitaTotal - custoTotal;
     var msg = lucroTotal > 0 ? "lucro" : "prejuízo";
-    System.out.printf("Houve um %s total de R$ %.2f\n", msg, Math.abs(lucroTotal));
+    this.out.printf("Houve um %s total de R$ %.2f\n", msg, Math.abs(lucroTotal));
   }
 
-  private void sairDoPrograma() {
-    System.out.println("Saindo...");
-    System.exit(0);
+  public void sairDoPrograma() {
+    this.out.println("Saindo...");
+    // System.exit(0);
+  }
+
+  @FunctionalInterface
+  public interface Opcao {
+    void accept(Main main);
   }
 }

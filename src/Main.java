@@ -1,5 +1,9 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+
+import javax.swing.JOptionPane;
+
 import java.io.PrintStream;
 
 import exceptions.ProdutoInvalidoException;
@@ -30,30 +34,32 @@ public class Main {
   private final ProdutoDao estoque;
   private final FuncionarioDao funcionarios;
   private String nomeFuncionario;
+  private Tela tela;
 
   public static void main(String[] args) {
     try (var entrada = new Entrada()) {
       new Tela();
-      //new Main(entrada, this.out).rodar();
+      // new Main(entrada, this.out).rodar();
     }
   }
 
-  public Main(Entrada entrada, PrintStream out) {
+  public Main(Entrada entrada, Tela tela, PrintStream out) {
     this.entrada = entrada;
     this.out = out;
+    this.tela = tela;
     var conexao = CriadorDeConexao.criar();
     this.estoque = new ProdutoDao(conexao);
     this.funcionarios = new FuncionarioDao(conexao);
   }
 
-  private void rodar() {
-    this.out.println("Bem-vindo a Cantina do IFAL!");
+  public void rodar() {
+    this.mostrarMensagem("Bem-vindo a Cantina do IFAL!");
 
     while (this.nomeFuncionario == null) {
       rodarUmaOpcao(DESCRICOES_OPCOES_FUNCIONARIOS, FUNCS_OPCOES_FUNCIONARIOS);
     }
 
-    this.out.printf("\nLogado como: %s\n", this.nomeFuncionario);
+    this.mostrarMensagem("Logado como: " + this.nomeFuncionario);
 
     while (true) {
       rodarUmaOpcao(DESCRICOES_OPCOES, FUNCS_OPCOES);
@@ -61,29 +67,39 @@ public class Main {
   }
 
   private void rodarUmaOpcao(String[] descricoes, Opcao[] funcoes) {
-    this.out.println("== Opções disponíveis:");
+    var opcao = JOptionPane.showOptionDialog(
+        this.tela, "Opcões disponíveis", "Rodar", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+        descricoes, null);
 
-    var qtdOpcoes = descricoes.length;
-    for (var i = 0; i < qtdOpcoes; i++) {
-      this.out.printf("%d. %s\n", i + 1, descricoes[i]);
-    }
-
-    var opcao = entrada.lerIndice("Escolha uma: ", qtdOpcoes);
-    var func = funcoes[opcao];
-
-    this.out.println();
-    func.accept(this);
-    this.out.println();
-    entrada.lerEnter("Aperte Enter para continuar...");
+    funcoes[opcao].accept(this);
   }
 
   private boolean checarQtd(List<Produto> produtos) {
     if (produtos.size() > 0) {
       return true;
     } else {
-      this.out.println("Não há produtos disponíveis no estoque!");
+      this.mostrarAviso("Não há produtos disponíveis no estoque!");
       return false;
     }
+  }
+
+  private String[] toStringProdutosI(List<Produto> produtos) {
+    var produtosStrings = new String[produtos.size()];
+
+    for (var i = 0; i < produtosStrings.length; i++) {
+      produtosStrings[i] = toStringProduto(produtos.get(i));
+    }
+
+    return produtosStrings;
+  }
+
+  private String toStringProduto(Produto produto) {
+    var msg = "%s, descrição: %s, preço de venda: R$ %.2f, quantidade: %d";
+    var nome = produto.getNome();
+    var descricao = produto.getDescricao();
+    var qtdAtual = produto.getQtdAtual();
+    var precoVenda = produto.getPrecoVenda();
+    return String.format(msg, nome, descricao, precoVenda, qtdAtual);
   }
 
   private void imprimirProdutosI(List<Produto> produtos) {
@@ -113,7 +129,7 @@ public class Main {
     try {
       this.funcionarios.cadastrar(funcionario);
     } catch (FuncionarioJaCadastradoException e) {
-      this.out.println("Esse email já está cadastrado");
+      this.mostrarErro("Esse email já está cadastrado");
     }
   }
 
@@ -125,7 +141,7 @@ public class Main {
     if (nome != null) {
       this.nomeFuncionario = nome;
     } else {
-      this.out.println("Email ou senha inexistentes ou incorretos");
+      this.mostrarErro("Email ou senha inexistentes ou incorretos");
     }
   }
 
@@ -136,19 +152,18 @@ public class Main {
 
     double precoVenda, precoVendaMin = precoCompra * 1.1;
     while ((precoVenda = entrada.lerDoubleValidar("Digite o preço de venda do produto: ")) < precoVendaMin) {
-      this.out.println("O preço da venda precisa ser maior que o preço da compra!");
+      this.mostrarErro("O preço da venda precisa ser maior que o preço da compra!");
     }
 
     var qtdComprada = entrada.lerInt("Digite a quantidade comprada do produto: ");
     var estoqueMinimo = entrada.lerInt("Digite o estoque mínimo do produto: ");
     var produto = new Produto(nome, descricao, precoVenda, precoCompra, qtdComprada, estoqueMinimo);
-    this.out.println();
 
     try {
       estoque.adicionar(produto);
-      this.out.println("O produto foi cadastrado com sucesso");
+      this.mostrarMensagem("O produto foi cadastrado com sucesso");
     } catch (ProdutoInvalidoException e) {
-      this.out.printf("Não foi possível cadastrar o produto: %s!\n", e.getMessage());
+      this.mostrarErro("Não foi possível cadastrar o produto: " + e.getMessage());
     }
   }
 
@@ -165,20 +180,10 @@ public class Main {
       return;
     }
 
-    imprimirProdutosI(produtos);
     Produto produto;
 
-    while (true) {
-      var escolha = entrada.lerIndice("Escolha um: ", produtos.size());
-      produto = produtos.get(escolha);
-
-      if (produto.getQtdAtual() > 0) {
-        break;
-      } else {
-        this.out.println("O produto está sem itens disponíveis!");
-      }
-    }
-
+    var escolha = this.escolherOpcoesDinamico(toStringProdutosI(produtos));
+    produto = produtos.get(escolha);
     var msg = "Qual a quantidade a ser vendida? ";
     var qtd = entrada.lerIntValidar(msg, 1, produto.getQtdComprada());
 
@@ -249,18 +254,14 @@ public class Main {
       return;
     }
 
-    imprimirProdutosI(produtos);
-    var escolha = entrada.lerIndice("Escolha um: ", produtos.size());
+    var escolha = this.escolherOpcoesDinamico(toStringProdutosI(produtos)); 
     estoque.remover(produtos.get(escolha));
     this.out.println("Produto removido com sucesso");
   }
 
   private void resumirEstoque() {
-    this.out.println("== Opcões disponíveis:");
-    this.out.println("1. Ordenar pelo nome");
-    this.out.println("2. Ordenar pelo descrição");
-    this.out.println("3. Ordenar pela quantidade (descrescente)");
-    var escolha = entrada.lerIndice("Escolha uma: ", 3);
+    var opcoes = new String[] { "Pelo nome", "Pela descrição", "Pela quantidade (decrescente)" };
+    var escolha = this.escolherOpcoes(opcoes);
 
     String propriedade = null;
     var decrescente = false;
@@ -325,8 +326,35 @@ public class Main {
   }
 
   public void sairDoPrograma() {
-    this.out.println("Saindo...");
-    // System.exit(0);
+    this.mostrarAviso("Saindo...");
+    System.exit(0);
+  }
+
+  private int escolherOpcoes(String[] opcoes) {
+    var opcao = JOptionPane.showOptionDialog(
+      this.tela, "Opcões disponíveis", "Rodar", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+      opcoes, null);
+
+    return opcao;
+  }
+
+  private int escolherOpcoesDinamico(String[] opcoes) {
+    var opcao = JOptionPane.showInputDialog(
+      this.tela, "Opcões disponíveis", "Rodar", JOptionPane.QUESTION_MESSAGE, null, opcoes, null);
+
+    return Arrays.asList(opcoes).indexOf(opcao);
+  }
+
+  private void mostrarMensagem(String msg) {
+    JOptionPane.showMessageDialog(this.tela, msg);
+  }
+
+  private void mostrarAviso(String msg) {
+    JOptionPane.showMessageDialog(this.tela, "Erro", msg, JOptionPane.WARNING_MESSAGE);
+  }
+
+  private void mostrarErro(String msg) {
+    JOptionPane.showMessageDialog(this.tela, "Erro", msg, JOptionPane.ERROR_MESSAGE);
   }
 
   @FunctionalInterface

@@ -12,11 +12,6 @@ public class Entrada implements AutoCloseable {
     this.scanner.close();
   }
 
-  public void lerEnter(String msg) {
-    System.out.print(msg);
-    scanner.nextLine();
-  }
-
   public String lerString(String msg) {
     while (true) {
       System.out.print(msg);

@@ -11,7 +11,7 @@ public class Tela extends JFrame implements ActionListener {
 
     public Tela() {
         this.mensagem = new JTextArea();
-        this.main = new Main(new Entrada(), new PrintStream(new TesteOutputStream(this.mensagem)));
+        this.main = new Main(new EntradaGUI(this), this, new PrintStream(new TesteOutputStream(this.mensagem)));
 
         botoes = new JButton[Main.DESCRICOES_OPCOES.length];
         this.setSize(820, 600);

@@ -30,6 +30,7 @@ public class VendaDao {
       stmt.setDouble(5, venda.getTotVenda());
       stmt.setDouble(6, venda.getDesconto());
       stmt.execute();
+      this.conexao.commit();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -40,6 +41,7 @@ public class VendaDao {
       var stmt = this.conexao.prepareStatement(COMANDO_REMOVER);
       stmt.setInt(1, venda.getCodVenda());
       stmt.execute();
+      this.conexao.commit();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -52,6 +54,7 @@ public class VendaDao {
       stmt.setString(2, venda.getFormaPagamento());
       stmt.setInt(3, venda.getCodVenda());
       stmt.execute();
+      this.conexao.commit();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

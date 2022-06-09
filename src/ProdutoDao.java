@@ -34,6 +34,7 @@ public class ProdutoDao {
       stmt.setInt(6, produto.getQtdAtual());
       stmt.setInt(7, produto.getEstoqueMinimo());
       stmt.execute();
+      this.conexao.commit();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -81,6 +82,7 @@ public class ProdutoDao {
       stmt.setInt(3, produto.getQtdComprada());
       stmt.setInt(4, produto.getCodigo());
       stmt.execute();
+      this.conexao.commit();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -91,6 +93,7 @@ public class ProdutoDao {
       var stmt = this.conexao.prepareStatement(COMANDO_REMOVER);
       stmt.setInt(1, produto.getCodigo());
       stmt.execute();
+      this.conexao.commit();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

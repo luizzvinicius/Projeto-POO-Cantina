@@ -24,7 +24,7 @@ public class VendaDAO {
     try {
       var stmt = this.conexao.prepareStatement(COMANDO_CADASTRAR);
       stmt.setInt(1, venda.getCodVenda());
-      //stmt.setDate(2, venda.getDataVenda()); // ué ?
+      // stmt.setDate(2, venda.getDataVenda()); // ué ?
       stmt.setString(3, venda.getEmailFunc());
       stmt.setString(4, venda.getFormaPagamento());
       stmt.setDouble(5, venda.getTotVenda());
@@ -73,9 +73,10 @@ public class VendaDAO {
         var totVenda = result.getDouble("total_venda");
         var desconto = result.getDouble("desconto");
 
-        //var venda = new Venda(formaPagamento, codVenda, desconto, totVenda, dataVenda);
+        // var venda = new Venda(formaPagamento, codVenda, desconto, totVenda,
+        // dataVenda);
 
-        //vendas.add(venda);
+        // vendas.add(venda);
       }
     } catch (SQLException e) {
       throw new RuntimeException(e);

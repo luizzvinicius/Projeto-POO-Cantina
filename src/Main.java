@@ -254,7 +254,7 @@ public class Main {
       return;
     }
 
-    var escolha = this.escolherOpcoesDinamico(toStringProdutosI(produtos)); 
+    var escolha = this.escolherOpcoesDinamico(toStringProdutosI(produtos));
     estoque.remover(produtos.get(escolha));
     this.out.println("Produto removido com sucesso");
   }
@@ -332,15 +332,15 @@ public class Main {
 
   private int escolherOpcoes(String[] opcoes) {
     var opcao = JOptionPane.showOptionDialog(
-      this.tela, "Opcões disponíveis", "Rodar", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-      opcoes, null);
+        this.tela, "Opcões disponíveis", "Rodar", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
+        opcoes, null);
 
     return opcao;
   }
 
   private int escolherOpcoesDinamico(String[] opcoes) {
     var opcao = JOptionPane.showInputDialog(
-      this.tela, "Opcões disponíveis", "Rodar", JOptionPane.QUESTION_MESSAGE, null, opcoes, null);
+        this.tela, "Opcões disponíveis", "Rodar", JOptionPane.QUESTION_MESSAGE, null, opcoes, null);
 
     return Arrays.asList(opcoes).indexOf(opcao);
   }

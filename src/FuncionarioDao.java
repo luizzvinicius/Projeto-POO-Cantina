@@ -14,7 +14,7 @@ public class FuncionarioDao {
     this.conexao = conexao;
   }
 
-  public void cadastrar(Funcionario funcionario) throws FuncionarioJaCadastradoException{
+  public void cadastrar(Funcionario funcionario) throws FuncionarioJaCadastradoException {
     try {
       var stmt = this.conexao.prepareStatement(COMANDO_CADASTRAR);
       stmt.setString(1, funcionario.getEmail());

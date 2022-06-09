@@ -7,7 +7,7 @@ public class CriadorDeConexao {
     try {
       return DriverManager.getConnection("jdbc:mysql://localhost/cantina");
     } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
+      throw new RuntimeException(e);
+    }
   }
 }

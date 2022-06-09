@@ -48,8 +48,7 @@ public class Main {
       rodarUmaOpcao(DESCRICOES_OPCOES_FUNCIONARIOS, FUNCS_OPCOES_FUNCIONARIOS);
     }
 
-    System.out.println();
-    System.out.println("Logado como " + this.nomeFuncionario);
+    System.out.printf("\nLogado como: %s\n", this.nomeFuncionario);
 
     while (true) {
       rodarUmaOpcao(DESCRICOES_OPCOES, FUNCS_OPCOES);
@@ -196,18 +195,17 @@ public class Main {
 
         if (dinheiro > produto.getPrecoVenda()) {
           var troco = dinheiro - produto.getPrecoVenda();
-          System.out.println("Troco: R$" + troco);
+          System.out.printf("Troco de R$ %2f\n", troco);
         }
       } else {
         System.out.println("Pagamento realizado com sucesso!");
       }
 
-      System.out.println();
-      System.out.printf("Vendendo %d %s\n", qtd, produto.getNome());
+      System.out.printf("\nVendendo %d %s\n", qtd, produto.getNome());
       produto.venderQtd(qtd);
       estoque.atualizar(produto);
     } catch (VendaInvalidaException e) {
-      System.out.println("Não foi possível vender o produto: " + e.getMessage() + "!");
+      System.out.printf("Não foi possível vender o produto: %s!", e.getMessage());
     }
   }
 

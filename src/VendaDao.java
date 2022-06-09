@@ -3,7 +3,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class VendaDAO {
+public class VendaDao {
   private static final String COMANDO_CADASTRAR = "INSERT INTO Venda "
       + "(codigo, data_venda, email_func, forma_pagamento, total_venda, desconto)" + "VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -16,7 +16,7 @@ public class VendaDAO {
 
   private final Connection conexao;
 
-  public VendaDAO(Connection conexao) {
+  public VendaDao(Connection conexao) {
     this.conexao = conexao;
   }
 

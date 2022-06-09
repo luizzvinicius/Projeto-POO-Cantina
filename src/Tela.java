@@ -1,17 +1,14 @@
 import java.awt.*;
 import java.awt.event.*;
-import java.io.PrintStream;
 import javax.swing.*;
 
 public class Tela extends JFrame implements ActionListener {
   private JButton[] botoes;
-  private JTextArea mensagem;
   private Container container;
   private Main main;
 
   public Tela() {
-    this.mensagem = new JTextArea();
-    this.main = new Main(new EntradaGUI(this), this, new PrintStream(new TesteOutputStream(this.mensagem)));
+    this.main = new Main(new Entrada(this), this);
 
     botoes = new JButton[Main.DESCRICOES_OPCOES.length];
     this.setSize(820, 600);
@@ -36,16 +33,11 @@ public class Tela extends JFrame implements ActionListener {
 
     }
 
-    container.add(mensagem);
-    mensagem.setFont(new Font("SansSerif", Font.PLAIN, 30));
-    // mensagem.setForeground(Color.WHITE);
-
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    this.mensagem.setText("");
     Main.FUNCS_OPCOES[Integer.parseInt(e.getActionCommand())].accept(this.main);
   }
 }

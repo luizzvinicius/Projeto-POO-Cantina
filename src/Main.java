@@ -1,6 +1,5 @@
 import exceptions.ProdutoInvalidoException;
 import exceptions.VendaInvalidaException;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,22 +26,17 @@ public class Main {
   };
 
   private final Entrada entrada;
-  private final PrintStream out;
   private final ProdutoDao estoque;
   private final FuncionarioDao funcionarios;
   private String nomeFuncionario;
   private Tela tela;
 
   public static void main(String[] args) {
-    try (var entrada = new Entrada()) {
-      new Tela();
-      // new Main(entrada, this.out).rodar();
-    }
+    new Main(new Entrada(null), null).rodar();
   }
 
-  public Main(Entrada entrada, Tela tela, PrintStream out) {
+  public Main(Entrada entrada, Tela tela) {
     this.entrada = entrada;
-    this.out = out;
     this.tela = tela;
     var conexao = CriadorDeConexao.criar();
     this.estoque = new ProdutoDao(conexao);
@@ -50,7 +44,7 @@ public class Main {
   }
 
   public void rodar() {
-    this.mostrarMensagem("Bem-vindo a Cantina do IFAL!");
+    this.mostrarMensagem("Iniciando...");
 
     while (this.nomeFuncionario == null) {
       rodarUmaOpcao(DESCRICOES_OPCOES_FUNCIONARIOS, FUNCS_OPCOES_FUNCIONARIOS);
@@ -64,10 +58,7 @@ public class Main {
   }
 
   private void rodarUmaOpcao(String[] descricoes, Opcao[] funcoes) {
-    var opcao = JOptionPane.showOptionDialog(
-        this.tela, "Opcões disponíveis", "Rodar", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-        descricoes, null);
-
+    var opcao = this.escolherOpcoesDinamico("Opções", "Escolha uma", descricoes);
     funcoes[opcao].accept(this);
   }
 
@@ -97,24 +88,6 @@ public class Main {
     var qtdAtual = produto.getQtdAtual();
     var precoVenda = produto.getPrecoVenda();
     return String.format(msg, nome, descricao, precoVenda, qtdAtual);
-  }
-
-  private void imprimirProdutosI(List<Produto> produtos) {
-    this.out.println("== Produtos:");
-
-    for (var i = 0; i < produtos.size(); i++) {
-      this.out.printf("%d. ", i + 1);
-      imprimirProduto(produtos.get(i));
-    }
-  }
-
-  private void imprimirProduto(Produto produto) {
-    var msg = "%s, descrição: %s, preço de venda: R$ %.2f, quantidade: %d\n";
-    var nome = produto.getNome();
-    var descricao = produto.getDescricao();
-    var qtdAtual = produto.getQtdAtual();
-    var precoVenda = produto.getPrecoVenda();
-    this.out.printf(msg, nome, descricao, precoVenda, qtdAtual);
   }
 
   private void cadastrar() {
@@ -179,7 +152,7 @@ public class Main {
 
     Produto produto;
 
-    var escolha = this.escolherOpcoesDinamico(toStringProdutosI(produtos));
+    var escolha = this.escolherOpcoesDinamico("Vender produto", "Escolha um", toStringProdutosI(produtos));
     produto = produtos.get(escolha);
     var msg = "Qual a quantidade a ser vendida? ";
     var qtd = entrada.lerIntValidar(msg, 1, produto.getQtdComprada());
@@ -194,7 +167,7 @@ public class Main {
           dinheiro = entrada.lerDoubleValidar("Digite quanto vai ser pago: ");
 
           if (dinheiro < produto.getPrecoVenda()) {
-            this.out.println("Valor inválido!");
+            this.mostrarErro("Valor inválido!");
           } else {
             break;
           }
@@ -202,29 +175,23 @@ public class Main {
 
         if (dinheiro > produto.getPrecoVenda()) {
           var troco = dinheiro - produto.getPrecoVenda();
-          this.out.printf("Troco de R$ %2f\n", troco);
+          this.mostrarMensagem(String.format("Troco de R$ %.2f\n", troco));
         }
       } else {
-        this.out.println("Pagamento realizado com sucesso!");
+        this.mostrarMensagem("Pagamento realizado com sucesso!");
       }
 
-      this.out.printf("\nVendendo %d %s\n", qtd, produto.getNome());
+      this.mostrarMensagem(String.format("Vendendo %d %s", qtd, produto.getNome()));
       produto.venderQtd(qtd);
       estoque.atualizar(produto);
     } catch (VendaInvalidaException e) {
-      this.out.printf("Não foi possível vender o produto: %s!", e.getMessage());
+      this.mostrarErro("Não foi possível vender o produto: " + e.getMessage());
     }
   }
 
   private String formaPagamento() {
-    var pagamentos = new String[] { "Dinheiro", "Cartão de crédito", "Cartão de débito", "Pix" };
-
-    for (var i = 0; i < pagamentos.length; i++) {
-      this.out.printf("%d. %s.\n", i + 1, pagamentos[i]);
-    }
-
-    var escolha = entrada.lerIndice("Escolha uma forma de pagamento: ", pagamentos.length);
-    return pagamentos[escolha];
+    var opcoes = new String[] { "Dinheiro", "Cartão de crédito", "Cartão de débito", "Pix" };
+    return opcoes[this.escolherOpcoes("Vender produto", "Forma de pagamento", opcoes)];
   }
 
   private void adicionarQtd() {
@@ -233,9 +200,8 @@ public class Main {
     if (!checarQtd(produtos)) {
       return;
     }
-
-    imprimirProdutosI(produtos);
-    var escolha = entrada.lerIndice("Escolha um: ", produtos.size());
+    
+    var escolha = this.escolherOpcoesDinamico("Remover produto", "Escolha um", toStringProdutosI(produtos));
     var produto = produtos.get(escolha);
 
     var msg = "Qual a quantidade a ser adicionada? ";
@@ -251,14 +217,14 @@ public class Main {
       return;
     }
 
-    var escolha = this.escolherOpcoesDinamico(toStringProdutosI(produtos));
+    var escolha = this.escolherOpcoesDinamico("Remover produto", "Escolha um", toStringProdutosI(produtos));
     estoque.remover(produtos.get(escolha));
-    this.out.println("Produto removido com sucesso");
+    this.mostrarMensagem("Produto removido com sucesso");
   }
 
   private void resumirEstoque() {
     var opcoes = new String[] { "Pelo nome", "Pela descrição", "Pela quantidade (decrescente)" };
-    var escolha = this.escolherOpcoes(opcoes);
+    var escolha = this.escolherOpcoes("Remover produto", "Ordenar por:", opcoes);
 
     String propriedade = null;
     var decrescente = false;
@@ -278,26 +244,24 @@ public class Main {
       return;
     }
 
-    this.out.println();
-    produtos.forEach(produto -> imprimirProduto(produto));
+    this.mostrarMensagem(String.join("\n", toStringProdutosI(produtos)));
   }
 
   private void verProdutosEmFalta() {
-    var produtos = estoque.getProdutos();
+    var msg = new ArrayList<String>();
 
-    if (!checarQtd(produtos)) {
-      return;
+    for (var produto : this.estoque.getProdutos()) {
+      if (produto.getQtdAtual() > 0) {
+        msg.add(toStringProduto(produto));
+      }
     }
 
-    produtos.forEach(produto -> {
-      if (produto.getQtdAtual() < produto.getEstoqueMinimo()) {
-        imprimirProduto(produto);
-      }
-    });
+    this.mostrarMensagem(String.join("\n", msg));
   }
 
   public void mostrarLucroPrejuizo() {
     var produtos = estoque.getProdutos();
+    var msgs = new ArrayList<String>();
 
     if (!checarQtd(produtos)) {
       return;
@@ -314,12 +278,12 @@ public class Main {
 
       var lucro = receita - custo;
       var msg = lucro > 0 ? "lucro" : "prejuízo";
-      this.out.printf("%s deu um %s de R$ %.2f\n", produto.getNome(), msg, Math.abs(lucro));
+      msgs.add(String.format("%s deu um %s de R$ %.2f\n", produto.getNome(), msg, Math.abs(lucro)));
     }
 
     var lucroTotal = receitaTotal - custoTotal;
     var msg = lucroTotal > 0 ? "lucro" : "prejuízo";
-    this.out.printf("Houve um %s total de R$ %.2f\n", msg, Math.abs(lucroTotal));
+    msgs.add(String.format("Houve um %s total de R$ %.2f\n", msg, Math.abs(lucroTotal)));
   }
 
   public void sairDoPrograma() {
@@ -327,17 +291,16 @@ public class Main {
     System.exit(0);
   }
 
-  private int escolherOpcoes(String[] opcoes) {
+  private int escolherOpcoes(String titulo, String msg, String[] opcoes) {
     var opcao = JOptionPane.showOptionDialog(
-        this.tela, "Opcões disponíveis", "Rodar", JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null,
-        opcoes, null);
+        this.tela, titulo, msg, JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, null);
 
     return opcao;
   }
 
-  private int escolherOpcoesDinamico(String[] opcoes) {
+  private int escolherOpcoesDinamico(String titulo, String msg, String[] opcoes) {
     var opcao = JOptionPane.showInputDialog(
-        this.tela, "Opcões disponíveis", "Rodar", JOptionPane.QUESTION_MESSAGE, null, opcoes, null);
+        this.tela, msg, titulo, JOptionPane.QUESTION_MESSAGE, null, opcoes, null);
 
     return Arrays.asList(opcoes).indexOf(opcao);
   }

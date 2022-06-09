@@ -1,13 +1,10 @@
+import exceptions.ProdutoInvalidoException;
+import exceptions.VendaInvalidaException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import javax.swing.JOptionPane;
-
-import java.io.PrintStream;
-
-import exceptions.ProdutoInvalidoException;
-import exceptions.VendaInvalidaException;
 
 public class Main {
   public static final String[] DESCRICOES_OPCOES = new String[] {

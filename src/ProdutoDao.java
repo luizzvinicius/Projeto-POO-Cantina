@@ -1,9 +1,8 @@
+import exceptions.ProdutoInvalidoException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-
-import exceptions.ProdutoInvalidoException;
 
 public class ProdutoDao {
   private static final String COMANDO_ADICIONAR = "INSERT INTO Produto " +

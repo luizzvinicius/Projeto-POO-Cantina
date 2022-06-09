@@ -1,7 +1,7 @@
-import javax.swing.*;
 import java.awt.*;
-import java.io.PrintStream;
 import java.awt.event.*;
+import java.io.PrintStream;
+import javax.swing.*;
 
 public class Tela extends JFrame implements ActionListener {
   private JButton[] botoes;

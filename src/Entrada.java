@@ -1,9 +1,9 @@
 import javax.swing.JOptionPane;
 
 public class Entrada {
-  private Tela tela;
+  private TelaOpcoes tela;
 
-  public Entrada(Tela tela) {
+  public Entrada(TelaOpcoes tela) {
     this.tela = tela;
   }
 
@@ -47,10 +47,6 @@ public class Entrada {
     } while (entrada < min || entrada > max);
 
     return entrada;
-  }
-
-  public int lerIndice(String msg, int max) {
-    return lerIntValidar(msg, 1, max) - 1;
   }
 
   public double lerDoubleValidar(String msg) {

@@ -9,57 +9,24 @@ public class Main {
   public static final String[] DESCRICOES_OPCOES = new String[] {
       "Cadastrar produto", "Vender produto", "Adicionar quantidade ao produto",
       "Remover produto", "Resumir estoque", "Ver produtos em falta", "Mostrar lucro/prejuízo",
-      "Sair do programa"
+      "Sair da conta"
   };
 
-  public static final Opcao[] FUNCS_OPCOES = new Opcao[] {
+  public static final Opcao[] FUNCOES_OPCOES = new Opcao[] {
       Main::cadastrarProduto, Main::venderProduto, Main::adicionarQtd, Main::removerProduto,
-      Main::resumirEstoque, Main::verProdutosEmFalta, Main::mostrarLucroPrejuizo, Main::sairDoPrograma
-  };
-
-  private static final String[] DESCRICOES_OPCOES_FUNCIONARIOS = new String[] {
-      "Entrar", "Cadastrar", "Sair do programa"
-  };
-
-  private static final Opcao[] FUNCS_OPCOES_FUNCIONARIOS = new Opcao[] {
-      Main::entrar, Main::cadastrar, Main::sairDoPrograma
+      Main::resumirEstoque, Main::verProdutosEmFalta, Main::mostrarLucroPrejuizo, Main::sairDaConta
   };
 
   private final Entrada entrada;
+  private final Dados dados;
   private final ProdutoDao estoque;
-  private final FuncionarioDao funcionarios;
-  private String nomeFuncionario;
-  private Tela tela;
+  private TelaOpcoes tela;
 
-  public static void main(String[] args) {
-    new Main(new Entrada(null), null).rodar();
-  }
-
-  public Main(Entrada entrada, Tela tela) {
+  public Main(Entrada entrada, Dados dados, TelaOpcoes tela) {
     this.entrada = entrada;
     this.tela = tela;
-    var conexao = CriadorDeConexao.criar();
-    this.estoque = new ProdutoDao(conexao);
-    this.funcionarios = new FuncionarioDao(conexao);
-  }
-
-  public void rodar() {
-    this.mostrarMensagem("Iniciando...");
-
-    while (this.nomeFuncionario == null) {
-      rodarUmaOpcao(DESCRICOES_OPCOES_FUNCIONARIOS, FUNCS_OPCOES_FUNCIONARIOS);
-    }
-
-    this.mostrarMensagem("Logado como: " + this.nomeFuncionario);
-
-    while (true) {
-      rodarUmaOpcao(DESCRICOES_OPCOES, FUNCS_OPCOES);
-    }
-  }
-
-  private void rodarUmaOpcao(String[] descricoes, Opcao[] funcoes) {
-    var opcao = this.escolherOpcoesDinamico("Opções", "Escolha uma", descricoes);
-    funcoes[opcao].accept(this);
+    this.dados = dados;
+    this.estoque = dados.estoque;
   }
 
   private boolean checarQtd(List<Produto> produtos) {
@@ -71,7 +38,7 @@ public class Main {
     }
   }
 
-  private String[] toStringProdutosI(List<Produto> produtos) {
+  private String[] toStringProdutos(List<Produto> produtos) {
     var produtosStrings = new String[produtos.size()];
 
     for (var i = 0; i < produtosStrings.length; i++) {
@@ -88,31 +55,6 @@ public class Main {
     var qtdAtual = produto.getQtdAtual();
     var precoVenda = produto.getPrecoVenda();
     return String.format(msg, nome, descricao, precoVenda, qtdAtual);
-  }
-
-  private void cadastrar() {
-    var nome = this.entrada.lerString("Digite o nome do usuário: ");
-    var email = this.entrada.lerString("Digite o email do usuário: ");
-    var senha = this.entrada.lerString("Digite a senha: ");
-    var funcionario = new Funcionario(nome, email, senha);
-
-    try {
-      this.funcionarios.cadastrar(funcionario);
-    } catch (FuncionarioJaCadastradoException e) {
-      this.mostrarErro("Esse email já está cadastrado");
-    }
-  }
-
-  private void entrar() {
-    var email = this.entrada.lerString("Digite o email do funcionário: ");
-    var senha = this.entrada.lerString("Digite a senha: ");
-    var nome = this.funcionarios.login(email, senha);
-
-    if (nome != null) {
-      this.nomeFuncionario = nome;
-    } else {
-      this.mostrarErro("Email ou senha inexistentes ou incorretos");
-    }
   }
 
   private void cadastrarProduto() {
@@ -152,7 +94,7 @@ public class Main {
 
     Produto produto;
 
-    var escolha = this.escolherOpcoesDinamico("Vender produto", "Escolha um", toStringProdutosI(produtos));
+    var escolha = this.escolherOpcoesDinamico("Vender produto", "Escolha um", toStringProdutos(produtos));
     produto = produtos.get(escolha);
     var msg = "Qual a quantidade a ser vendida? ";
     var qtd = entrada.lerIntValidar(msg, 1, produto.getQtdComprada());
@@ -200,8 +142,8 @@ public class Main {
     if (!checarQtd(produtos)) {
       return;
     }
-    
-    var escolha = this.escolherOpcoesDinamico("Remover produto", "Escolha um", toStringProdutosI(produtos));
+
+    var escolha = this.escolherOpcoesDinamico("Remover produto", "Escolha um", toStringProdutos(produtos));
     var produto = produtos.get(escolha);
 
     var msg = "Qual a quantidade a ser adicionada? ";
@@ -217,7 +159,7 @@ public class Main {
       return;
     }
 
-    var escolha = this.escolherOpcoesDinamico("Remover produto", "Escolha um", toStringProdutosI(produtos));
+    var escolha = this.escolherOpcoesDinamico("Remover produto", "Escolha um", toStringProdutos(produtos));
     estoque.remover(produtos.get(escolha));
     this.mostrarMensagem("Produto removido com sucesso");
   }
@@ -244,7 +186,7 @@ public class Main {
       return;
     }
 
-    this.mostrarMensagem(String.join("\n", toStringProdutosI(produtos)));
+    this.mostrarMensagem(String.join("\n", toStringProdutos(produtos)));
   }
 
   private void verProdutosEmFalta() {
@@ -286,9 +228,9 @@ public class Main {
     msgs.add(String.format("Houve um %s total de R$ %.2f\n", msg, Math.abs(lucroTotal)));
   }
 
-  public void sairDoPrograma() {
-    this.mostrarAviso("Saindo...");
-    System.exit(0);
+  public void sairDaConta() {
+    this.dados.nomeFuncionario = null;
+    this.tela.atualizarBotoes();
   }
 
   private int escolherOpcoes(String titulo, String msg, String[] opcoes) {
@@ -310,11 +252,11 @@ public class Main {
   }
 
   private void mostrarAviso(String msg) {
-    JOptionPane.showMessageDialog(this.tela, "Erro", msg, JOptionPane.WARNING_MESSAGE);
+    JOptionPane.showMessageDialog(this.tela, msg, "Aviso", JOptionPane.WARNING_MESSAGE);
   }
 
   private void mostrarErro(String msg) {
-    JOptionPane.showMessageDialog(this.tela, "Erro", msg, JOptionPane.ERROR_MESSAGE);
+    JOptionPane.showMessageDialog(this.tela, msg, "Erro", JOptionPane.ERROR_MESSAGE);
   }
 
   @FunctionalInterface

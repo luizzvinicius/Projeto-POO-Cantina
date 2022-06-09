@@ -1,56 +1,56 @@
 import java.time.LocalDate;
 
 public class Venda {
-    private String formaPagamento, emailFunc;
-    private int codVenda;
-    private double desconto, totVenda;
-    private LocalDate dataVenda;
+  private String formaPagamento, emailFunc;
+  private int codVenda;
+  private double desconto, totVenda;
+  private LocalDate dataVenda;
 
-    public Venda(String formaPagamento, int codVenda, double desconto, double totVenda, LocalDate dataVenda) {
-        this.formaPagamento = formaPagamento;
-        this.codVenda = codVenda;
-        this.desconto = desconto;
-        this.totVenda = totVenda;
-        this.dataVenda = dataVenda;
-    }
+  public Venda(String formaPagamento, int codVenda, double desconto, double totVenda, LocalDate dataVenda) {
+    this.formaPagamento = formaPagamento;
+    this.codVenda = codVenda;
+    this.desconto = desconto;
+    this.totVenda = totVenda;
+    this.dataVenda = dataVenda;
+  }
 
-    public String getFormaPagamento() {
-        return formaPagamento;
-    }
+  public String getFormaPagamento() {
+    return formaPagamento;
+  }
 
-    public int getCodVenda() {
-        return codVenda;
-    }
+  public int getCodVenda() {
+    return codVenda;
+  }
 
-    public String getEmailFunc() {
-        return emailFunc;
-    }
+  public String getEmailFunc() {
+    return emailFunc;
+  }
 
-    public double getDesconto() {
-        return desconto;
-    }
+  public double getDesconto() {
+    return desconto;
+  }
 
-    public double getTotVenda() {
-        return totVenda;
-    }
+  public double getTotVenda() {
+    return totVenda;
+  }
 
-    public LocalDate getDataVenda() {
-        return dataVenda;
-    }
+  public LocalDate getDataVenda() {
+    return dataVenda;
+  }
 
-    public void setCodVenda(int codVenda) {
-        this.codVenda = codVenda;
-    }
+  public void setCodVenda(int codVenda) {
+    this.codVenda = codVenda;
+  }
 
-    public void setDesconto(double desconto) {
-        this.desconto = desconto;
-    }
+  public void setDesconto(double desconto) {
+    this.desconto = desconto;
+  }
 
-    public void setTotVenda(double totVenda) {
-        this.totVenda = totVenda;
-    }
+  public void setTotVenda(double totVenda) {
+    this.totVenda = totVenda;
+  }
 
-    public void setDataVenda(LocalDate dataVenda) {
-        this.dataVenda = dataVenda;
-    }
+  public void setDataVenda(LocalDate dataVenda) {
+    this.dataVenda = dataVenda;
+  }
 }

@@ -1,5 +1,4 @@
 CREATE DATABASE IF NOT EXISTS cantina_flm;
-
 USE cantina_flm;
 CREATE TABLE IF NOT EXISTS Funcionario (
   email VARCHAR(30),

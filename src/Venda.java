@@ -6,9 +6,9 @@ public class Venda {
   private double desconto, totVenda;
   private LocalDate dataVenda;
 
-  public Venda(String formaPagamento, int codVenda, double desconto, double totVenda, LocalDate dataVenda) {
+  public Venda(String emailFunc, String formaPagamento, double desconto, double totVenda, LocalDate dataVenda) {
+    this.emailFunc = emailFunc;
     this.formaPagamento = formaPagamento;
-    this.codVenda = codVenda;
     this.desconto = desconto;
     this.totVenda = totVenda;
     this.dataVenda = dataVenda;

@@ -1,4 +1,5 @@
 CREATE DATABASE IF NOT EXISTS cantina_flm;
+
 USE cantina_flm;
 CREATE TABLE IF NOT EXISTS Funcionario (
   email VARCHAR(30),
@@ -23,10 +24,10 @@ CREATE TABLE IF NOT EXISTS Cadastra (
   cod_produto INT(8),
   PRIMARY KEY (email_func, cod_produto),
   FOREIGN KEY (email_func) REFERENCES Funcionario (email),
-  FOREIGN KEY (cod_produto) REFERENCES Produto (codigo)
+  FOREIGN KEY (cod_produto) REFERENCES Produto (codigo) ON DELETE CASCADE
 );
 CREATE TABLE IF NOT EXISTS Venda (
-  codigo INT(8),
+  codigo INT(8) AUTO_INCREMENT,
   data_venda date,
   email_func VARCHAR(30),
   forma_pagamento VARCHAR(30),
@@ -36,12 +37,12 @@ CREATE TABLE IF NOT EXISTS Venda (
   FOREIGN KEY (email_func) REFERENCES Funcionario (email)
 );
 CREATE TABLE IF NOT EXISTS Item (
-  codigo INT(8),
+  codigo INT(8) AUTO_INCREMENT,
   cod_venda INT(8),
   cod_produto INT(8),
   qtdidade INT(8),
   preco DECIMAL(10, 2),
   PRIMARY KEY (codigo),
   FOREIGN KEY (cod_venda) REFERENCES Venda (codigo),
-  FOREIGN KEY (cod_produto) REFERENCES Produto (codigo)
+  FOREIGN KEY (cod_produto) REFERENCES Produto (codigo) ON DELETE CASCADE
 );

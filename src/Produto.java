@@ -2,10 +2,9 @@ import exceptions.ProdutoInvalidoException;
 import exceptions.VendaInvalidaException;
 
 public class Produto {
-  private int codigo;
   private String nome, descricao;
+  private int codigo, qtdAtual, qtdVendida, qtdComprada, estoqueMinimo;
   private double precoVenda, precoCompra;
-  private int qtdAtual, qtdVendida, qtdComprada, estoqueMinimo;
 
   public Produto(int codigo, String nome, String descricao, double precoVenda, double precoCompra, int qtdAtual,
       int qtdVendida, int qtdComprada, int estoqueMinimo) {

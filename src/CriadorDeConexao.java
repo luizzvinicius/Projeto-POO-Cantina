@@ -27,12 +27,10 @@ public class CriadorDeConexao {
 
     try (var stmt = conexao.createStatement()) {
       var script = Files.readString(Paths.get("Criar-tabelas.sql"));
-      script = script.replaceAll(",\r\n\\s*", ", ");
-      script = script.replaceAll("\\(\r\n\\s+", "(");
-      script = script.replaceAll("\\)\r\n", ")");
+      script = script.replaceAll("\r\n", "");
 
-      for (var linha : script.split("\r\n")) {
-        stmt.addBatch(linha);
+      for (var linha : script.split(";")) {
+        stmt.addBatch(linha + ";");
       }
 
       stmt.executeBatch();

@@ -1,3 +1,4 @@
+import exceptions.FuncionarioOpException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLIntegrityConstraintViolationException;
@@ -18,7 +19,6 @@ public class FuncionarioDao {
       stmt.setString(2, funcionario.getNome());
       stmt.setString(3, funcionario.getSenha());
       stmt.execute();
-      this.conexao.commit();
     } catch (SQLIntegrityConstraintViolationException e) {
       throw new FuncionarioOpException("Email já cadastrado");
     } catch (SQLException e) {
@@ -26,7 +26,7 @@ public class FuncionarioDao {
     }
   }
 
-  public String login(String email, String senha) throws FuncionarioOpException {
+  public Funcionario entrar(String email, String senha) throws FuncionarioOpException {
     try (var stmt = this.conexao.prepareStatement(COMANDO_LOGIN)) {
       stmt.setString(1, email);
       stmt.setString(2, senha);
@@ -36,7 +36,7 @@ public class FuncionarioDao {
         throw new FuncionarioOpException("Email/ou senha incorretos");
       }
 
-      return result.getString("nome");
+      return new Funcionario(result.getString("nome"), email, senha);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

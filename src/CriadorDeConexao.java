@@ -8,9 +8,10 @@ import java.sql.SQLException;
 public class CriadorDeConexao {
   public static Connection criar() {
     try {
-      var conexao = DriverManager.getConnection("jdbc:mysql://localhost", "root", "root");
+      var conexao = DriverManager.getConnection("jdbc:mysql://localhost");
       conexao.setAutoCommit(false);
       criarTabelas(conexao);
+      conexao.setAutoCommit(true);
       return conexao;
     } catch (IOException | SQLException e) {
       throw new RuntimeException(e);

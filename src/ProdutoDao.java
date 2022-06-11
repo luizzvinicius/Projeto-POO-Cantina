@@ -1,6 +1,7 @@
 import exceptions.ProdutoInvalidoException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ public class ProdutoDao {
       "(nome, descricao, preco_venda, preco_compra, qtd_atual, qtd_comprada, estoque_minimo)" +
       "VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-  private static final String COMANDO_ATUALIZAR = "UPDATE PRODUTO SET " +
+  private static final String COMANDO_ATUALIZAR = "UPDATE Produto SET " +
       "qtd_atual = ?, qtd_vendida = ?, qtd_comprada = ? WHERE codigo = ?";
 
   private static final String COMANDO_GET_PRODUTOS = "SELECT * FROM Produto ORDER BY ? ?";
@@ -21,11 +22,11 @@ public class ProdutoDao {
     this.conexao = conexao;
   }
 
-  public void adicionar(Produto produto) throws ProdutoInvalidoException {
+  public int adicionar(Produto produto) throws ProdutoInvalidoException {
     produto.validarParaAdicionar();
 
     try {
-      var stmt = this.conexao.prepareStatement(COMANDO_ADICIONAR);
+      var stmt = this.conexao.prepareStatement(COMANDO_ADICIONAR, Statement.RETURN_GENERATED_KEYS);
       stmt.setString(1, produto.getNome());
       stmt.setString(2, produto.getDescricao());
       stmt.setDouble(3, produto.getPrecoVenda());
@@ -34,7 +35,10 @@ public class ProdutoDao {
       stmt.setInt(6, produto.getQtdAtual());
       stmt.setInt(7, produto.getEstoqueMinimo());
       stmt.execute();
-      this.conexao.commit();
+
+      var rs = stmt.getGeneratedKeys();
+      rs.next();
+      return rs.getInt(1);
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -82,7 +86,6 @@ public class ProdutoDao {
       stmt.setInt(3, produto.getQtdComprada());
       stmt.setInt(4, produto.getCodigo());
       stmt.execute();
-      this.conexao.commit();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -93,7 +96,6 @@ public class ProdutoDao {
       var stmt = this.conexao.prepareStatement(COMANDO_REMOVER);
       stmt.setInt(1, produto.getCodigo());
       stmt.execute();
-      this.conexao.commit();
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

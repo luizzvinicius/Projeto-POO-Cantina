@@ -1,6 +1,7 @@
 public class Item {
-  private int codigo, codVenda, codProduto, qtd;
-  private double preco;
+  private final int codVenda, codProduto, qtd;
+  private final double preco;
+  private int codigo;
 
   public Item(int codVenda, int codProduto, int qtd, double preco) {
     this.codVenda = codVenda;

@@ -1,5 +1,5 @@
 public class Funcionario {
-  private String nome, email, senha;
+  private final String nome, email, senha;
 
   public Funcionario(String nome, String email, String senha) {
     this.nome = nome;

@@ -23,7 +23,19 @@ public class ProdutoDao {
   }
 
   public void adicionar(Produto produto) throws ProdutoInvalidoException {
-    produto.validarParaAdicionar();
+    if (produto.getCodigo() != -1) {
+      throw new ProdutoInvalidoException("Produto não pode ter um código");
+    } else if (produto.getNome().isBlank()) {
+      throw new ProdutoInvalidoException("Nome não pode estar vazio");
+    } else if (produto.getDescricao().isBlank()) {
+      throw new ProdutoInvalidoException("Descrição não pode estar vazia");
+    } else if (produto.getPrecoCompra() <= 0) {
+      throw new ProdutoInvalidoException("Preço de compra deve ser maior que zero");
+    } else if (produto.getPrecoVenda() < produto.getPrecoCompra() * 1.1) {
+      throw new ProdutoInvalidoException("Preço de venda não pode ser menor que preço de compra");
+    } else if (produto.getQtdComprada() <= 0) {
+      throw new ProdutoInvalidoException("Quantidade inicial deve ser maior que zero");
+    }
 
     try (var stmt = this.conexao.prepareStatement(COMANDO_ADICIONAR, Statement.RETURN_GENERATED_KEYS)) {
       stmt.setString(1, produto.getNome());
@@ -73,7 +85,7 @@ public class ProdutoDao {
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
-    
+
     return produtos;
   }
 

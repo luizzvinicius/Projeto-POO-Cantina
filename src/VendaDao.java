@@ -5,7 +5,7 @@ import java.sql.Statement;
 
 public class VendaDao {
   private static final String COMANDO_CADASTRAR = "INSERT INTO Venda "
-      + "(data_venda, email_func, forma_pagamento, total_venda, desconto)"
+      + "(email_func, data_venda, total_venda, desconto, forma_pagamento)"
       + "VALUES (?, ?, ?, ?, ?)";
 
   private final Connection conexao;
@@ -16,11 +16,11 @@ public class VendaDao {
 
   public void adicionar(Venda venda) {
     try (var stmt = this.conexao.prepareStatement(COMANDO_CADASTRAR, Statement.RETURN_GENERATED_KEYS)) {
-      stmt.setDate(1, Date.valueOf(venda.getDataVenda()));
-      stmt.setString(2, venda.getEmailFunc());
-      stmt.setString(3, venda.getFormaPagamento());
-      stmt.setDouble(4, venda.getTotalVenda());
-      stmt.setDouble(5, venda.getDesconto());
+      stmt.setString(1, venda.getEmailFunc());
+      stmt.setDate(2, Date.valueOf(venda.getDataVenda()));
+      stmt.setDouble(3, venda.getTotalVenda());
+      stmt.setDouble(4, venda.getDesconto());
+      stmt.setString(5, venda.getFormaPagamento());
       stmt.execute();
 
       var result = stmt.getGeneratedKeys();

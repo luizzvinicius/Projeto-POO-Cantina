@@ -1,9 +1,15 @@
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
 
 public class TelaResumirEstoque {
-  private final String[] FORMAS = new String[] { "Nome", "Descrição", "Quantidade" };
+  private final String[] FORMAS = new String[] { "Pelo nome", "Pela descrição", "Pela quantidade (decrescente)" };
 
   private final JDialog dialog;
   private final Dados dados;

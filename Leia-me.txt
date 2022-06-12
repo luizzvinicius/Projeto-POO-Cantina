@@ -5,6 +5,6 @@
 
 # Todos os requisitos do projeto foram atendidos
 
-# Requisitos para o funcionamento:
-- ativar o servidor Apache e MYSQL no xampp
-- executar o programa (o banco é criado automaticamente)
+# Como usar:
+- Ativar o servidor MySQL
+- Executar o programa (o banco é criado automaticamente)

@@ -15,7 +15,7 @@ public class TelaCadastroProduto {
   private final JDialog dialog;
 
   private final Container containerCampos = new Container();
-  private final JButton botaoContinuar = new JButton("Continuar");
+  private final JButton botaoCadastrar = new JButton("Cadastrar");
   private final JTextField campoDescricao = new JTextField();
   private final JTextField campoNome = new JTextField();
   private final JTextField campoPrecoCompra = new JTextField();
@@ -29,8 +29,8 @@ public class TelaCadastroProduto {
     this.dialog = dialog;
     this.dialog.setTitle("Cadastrar produto");
 
-    this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoContinuar.addActionListener(this::handleAction);
+    this.botaoCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.botaoCadastrar.addActionListener(this::handleAction);
     this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     this.containerCampos.setLayout(new GridLayout(0, 2));
@@ -50,7 +50,7 @@ public class TelaCadastroProduto {
     var container = this.dialog.getContentPane();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     container.add(this.containerCampos);
-    container.add(this.botaoContinuar);
+    container.add(this.botaoCadastrar);
     container.add(this.labelErro);
 
     this.dialog.setMinimumSize(new Dimension(600, container.getMinimumSize().height));

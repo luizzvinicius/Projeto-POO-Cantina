@@ -16,7 +16,7 @@ public class TelaCadastroFuncionario {
   private final TelaOpcoes dono;
 
   private final Container containerCampos = new Container();
-  private final JButton botaoContinuar = new JButton("Continuar");
+  private final JButton botaoCadastrar = new JButton("Cadastrar");
   private final JTextField campoEmail = new JTextField();
   private final JTextField campoNome = new JTextField();
   private final JTextField campoSenha = new JTextField();
@@ -28,8 +28,8 @@ public class TelaCadastroFuncionario {
     this.dialog.setTitle("Cadastrar funcionário");
     this.dono = dono;
 
-    this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoContinuar.addActionListener(this::handleAction);
+    this.botaoCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.botaoCadastrar.addActionListener(this::handleAction);
     this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     this.containerCampos.setLayout(new GridLayout(0, 2));
@@ -43,7 +43,7 @@ public class TelaCadastroFuncionario {
     var container = this.dialog.getContentPane();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     container.add(this.containerCampos);
-    container.add(this.botaoContinuar);
+    container.add(this.botaoCadastrar);
     container.add(this.labelErro);
 
     this.dialog.setMinimumSize(new Dimension(300, container.getMinimumSize().height));

@@ -20,7 +20,7 @@ public class TelaVendaProduto {
   private final JDialog dialog;
 
   private final Container containerCampos = new Container();
-  private final JButton botaoContinuar = new JButton("Continuar");
+  private final JButton botaoVender = new JButton("Vender");
   private final JTextField campoQtd = new JTextField();
   private final JLabel labelErro = new JLabel();
   private final JComboBox<Produto> seletorProduto = new JComboBox<>();
@@ -31,8 +31,8 @@ public class TelaVendaProduto {
     this.dialog = dialog;
     this.dialog.setTitle("Vender produto");
 
-    this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoContinuar.addActionListener(this::handleAction);
+    this.botaoVender.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.botaoVender.addActionListener(this::handleAction);
     this.seletorProduto.setRenderer(this::renderizarProduto);
     this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -51,7 +51,7 @@ public class TelaVendaProduto {
     var container = this.dialog.getContentPane();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     container.add(this.containerCampos);
-    container.add(this.botaoContinuar);
+    container.add(this.botaoVender);
     container.add(this.labelErro);
 
     this.dialog.setMinimumSize(new Dimension(600, container.getMinimumSize().height));

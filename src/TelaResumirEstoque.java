@@ -15,7 +15,7 @@ public class TelaResumirEstoque {
   private final JDialog dialog;
 
   private final Container containerProdutos = new Container();
-  private final JButton botaoContinuar = new JButton("Continuar");
+  private final JButton botaoResumir = new JButton("Resumir");
   private final JComboBox<String> seletorFormasOrdenacao = new JComboBox<>(FORMAS);
 
   public TelaResumirEstoque(Dados dados, JDialog dialog, TelaOpcoes dono) {
@@ -23,15 +23,15 @@ public class TelaResumirEstoque {
     this.dialog = dialog;
     this.dialog.setTitle("Resumir estoque");
 
-    this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoContinuar.addActionListener(this::handleAction);
+    this.botaoResumir.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.botaoResumir.addActionListener(this::handleAction);
 
     this.containerProdutos.setLayout(new BoxLayout(this.containerProdutos, BoxLayout.Y_AXIS));
 
     var container = this.dialog.getContentPane();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     container.add(this.seletorFormasOrdenacao);
-    container.add(this.botaoContinuar);
+    container.add(this.botaoResumir);
     container.add(this.containerProdutos);
 
     this.dialog.setMinimumSize(new Dimension(600, container.getMinimumSize().height));

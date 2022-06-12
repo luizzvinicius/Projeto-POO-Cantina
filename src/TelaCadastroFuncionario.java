@@ -3,7 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaCadastroFuncionario extends JDialog {
+public class TelaCadastroFuncionario {
+  private final JDialog dialog;
   private final TelaOpcoes dono;
   private final Dados dados;
   private final Container container, containerCampos;
@@ -11,12 +12,13 @@ public class TelaCadastroFuncionario extends JDialog {
   private final JTextField campoEmail, campoNome, campoSenha;
   private final JLabel labelErro;
 
-  public TelaCadastroFuncionario(TelaOpcoes dono, Dados dados) {
-    super(dono.getFrame(), "Cadastrar funcionário", true);
-    this.dono = dono;
+  public TelaCadastroFuncionario(TelaOpcoes dono, JDialog dialog, Dados dados) {
     this.dados = dados;
+    this.dialog = dialog;
+    this.dialog.setTitle("Cadastrar funcionário");
+    this.dono = dono;
 
-    this.container = this.getContentPane();
+    this.container = this.dialog.getContentPane();
     this.containerCampos = new Container();
     this.botaoCadastrar = new JButton("Cadastrar");
     this.botaoCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -40,9 +42,9 @@ public class TelaCadastroFuncionario extends JDialog {
     this.container.add(this.botaoCadastrar);
     this.container.add(this.labelErro);
 
-    this.setMinimumSize(new Dimension(300, this.container.getMinimumSize().height));
-    this.pack();
-    this.setVisible(true);
+    this.dialog.setMinimumSize(new Dimension(300, this.container.getMinimumSize().height));
+    this.dialog.pack();
+    this.dialog.setVisible(true);
   }
 
   private void handleAction(ActionEvent event) {
@@ -55,11 +57,10 @@ public class TelaCadastroFuncionario extends JDialog {
       this.dados.funcionarios.cadastrar(funcionario);
       this.dados.funcionario = funcionario;
       this.dono.atualizarBotoes();
-      this.setVisible(false);
-      this.dispose();
+      this.dialog.setVisible(false);
     } catch (FuncionarioOpException e) {
       this.labelErro.setText(e.getMessage());
-      this.pack();
+      this.dialog.pack();
     }
   }
 }

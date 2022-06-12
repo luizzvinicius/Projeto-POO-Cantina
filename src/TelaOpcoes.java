@@ -20,18 +20,22 @@ public class TelaOpcoes {
   };
 
   private final JFrame frame;
+  private final JDialog dialog;
   private final Dados dados;
   private final Container container;
   private String[] descricoesOpcoes;
   private Opcao[] funcoesOpcoes;
 
   public TelaOpcoes() {
-    this.frame = new JFrame("Cantina IFAL");
     this.dados = new Dados();
+    this.frame = new JFrame("Cantina IFAL");
+    this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.dialog = new JDialog(this.frame, true);
+    this.dialog.addWindowListener(new WindowListenerLimpador(this.dialog));
+
     this.container = this.frame.getContentPane();
     this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
     this.atualizarBotoes();
-    this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     var dimension = Toolkit.getDefaultToolkit().getScreenSize();
     int x = (int) ((dimension.getWidth() - this.frame.getWidth()) / 2);
@@ -68,22 +72,18 @@ public class TelaOpcoes {
     this.frame.pack();
   }
 
-  private static void sairDaConta(TelaOpcoes telaOpcoes, Dados dados) {
+  private static void sairDaConta(TelaOpcoes telaOpcoes, JDialog dialog, Dados dados) {
     telaOpcoes.dados.funcionario = null;
     telaOpcoes.atualizarBotoes();
   }
 
-  public JFrame getFrame() {
-    return this.frame;
-  }
-
   private void handleAction(ActionEvent event) {
     var opcao = Integer.parseInt(event.getActionCommand());
-    this.funcoesOpcoes[opcao].rodar(this, this.dados);
+    this.funcoesOpcoes[opcao].rodar(this, this.dialog, this.dados);
   }
 
   @FunctionalInterface
   private interface Opcao {
-    void rodar(TelaOpcoes telaOpcoes, Dados dados);
+    void rodar(TelaOpcoes telaOpcoes, JDialog dialog, Dados dados);
   }
 }

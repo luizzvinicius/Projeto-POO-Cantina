@@ -3,7 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaCadastroProduto extends JDialog {
+public class TelaCadastroProduto {
+  private final JDialog dialog;
   private final Dados dados;
   private final Container container, containerCampos;
   private final JButton botaoCadastrar;
@@ -11,11 +12,12 @@ public class TelaCadastroProduto extends JDialog {
       campoEstoqueMinimo;
   private final JLabel labelErro;
 
-  public TelaCadastroProduto(TelaOpcoes dono, Dados dados) {
-    super(dono.getFrame(), "Cadastrar produto", true);
+  public TelaCadastroProduto(TelaOpcoes dono, JDialog dialog, Dados dados) {
     this.dados = dados;
+    this.dialog = dialog;
+    this.dialog.setTitle("Cadastrar produto");
 
-    this.container = this.getContentPane();
+    this.container = this.dialog.getContentPane();
     this.containerCampos = new Container();
     this.botaoCadastrar = new JButton("Cadastrar");
     this.botaoCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -48,9 +50,9 @@ public class TelaCadastroProduto extends JDialog {
     this.container.add(this.botaoCadastrar);
     this.container.add(this.labelErro);
 
-    this.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
-    this.pack();
-    this.setVisible(true);
+    this.dialog.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
+    this.dialog.pack();
+    this.dialog.setVisible(true);
   }
 
   private void handleAction(ActionEvent event) {
@@ -70,11 +72,10 @@ public class TelaCadastroProduto extends JDialog {
       var produto = new Produto(nome, descricao, precoVendaC, precoCompraC, qtdInicialC, estoqueMinimoC);
       this.dados.estoque.adicionar(produto);
       this.dados.cadastraDao.adicionar(this.dados.funcionario, produto);
-      this.setVisible(false);
-      this.dispose();
+      this.dialog.setVisible(false);
     } catch (NumberFormatException | ProdutoInvalidoException e) {
       this.labelErro.setText(e.getMessage());
-      this.pack();
+      this.dialog.pack();
     }
   }
 }

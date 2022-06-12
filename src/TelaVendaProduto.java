@@ -4,9 +4,10 @@ import java.awt.event.*;
 import java.time.LocalDate;
 import javax.swing.*;
 
-public class TelaVendaProduto extends JDialog {
+public class TelaVendaProduto {
   private static final String[] FORMAS = new String[] { "Dinheiro", "Cartão de crédito", "Cartão de débito", "Pix" };
 
+  private final JDialog dialog;
   private final Dados dados;
   private final Container container, containerCampos;
   private final JButton botaoVender;
@@ -15,11 +16,12 @@ public class TelaVendaProduto extends JDialog {
   private final JComboBox<Produto> seletorProduto;
   private final JComboBox<String> seletorFormasPagamento;
 
-  public TelaVendaProduto(TelaOpcoes dono, Dados dados) {
-    super(dono.getFrame(), "Vender produto", true);
+  public TelaVendaProduto(TelaOpcoes dono, JDialog dialog, Dados dados) {
     this.dados = dados;
+    this.dialog = dialog;
+    this.dialog.setTitle("Vender produto");
 
-    this.container = this.getContentPane();
+    this.container = this.dialog.getContentPane();
     this.containerCampos = new Container();
     this.botaoVender = new JButton("Vender");
     this.botaoVender.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -48,9 +50,9 @@ public class TelaVendaProduto extends JDialog {
     this.container.add(this.botaoVender);
     this.container.add(this.labelErro);
 
-    this.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
-    this.pack();
-    this.setVisible(true);
+    this.dialog.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
+    this.dialog.pack();
+    this.dialog.setVisible(true);
   }
 
   private void handleAction(ActionEvent event) {
@@ -63,17 +65,17 @@ public class TelaVendaProduto extends JDialog {
       produto.venderQtd(qtdC);
       this.dados.estoque.atualizar(produto);
 
-      var venda = new Venda(this.dados.funcionario.getEmail(), formaPagamento, 0d, produto.getPrecoVenda() * qtdC, LocalDate.now());
+      var venda = new Venda(this.dados.funcionario.getEmail(), formaPagamento, 0d, produto.getPrecoVenda() * qtdC,
+          LocalDate.now());
       this.dados.vendaDao.adicionar(venda);
 
       var item = new Item(venda.getCodigo(), produto.getCodigo(), qtdC, produto.getPrecoVenda());
       this.dados.itemDao.adicionar(item);
 
-      this.setVisible(false);
-      this.dispose();
+      this.dialog.setVisible(false);
     } catch (NumberFormatException | VendaInvalidaException e) {
       this.labelErro.setText(e.getMessage());
-      this.pack();
+      this.dialog.pack();
     }
   }
 

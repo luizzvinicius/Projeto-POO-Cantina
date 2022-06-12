@@ -2,16 +2,18 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaProdutosEmFalta extends JDialog {
+public class TelaProdutosEmFalta {
+  private final JDialog dialog;
   private final Dados dados;
   private final Container container, containerProdutos;
   private final JButton botaoFechar;
 
-  public TelaProdutosEmFalta(TelaOpcoes dono, Dados dados) {
-    super(dono.getFrame(), "Mostrar produtos em falta", true);
+  public TelaProdutosEmFalta(TelaOpcoes dono, JDialog dialog, Dados dados) {
     this.dados = dados;
+    this.dialog = dialog;
+    this.dialog.setTitle("Mostrar produtos em falta");
 
-    this.container = this.getContentPane();
+    this.container = this.dialog.getContentPane();
     this.containerProdutos = new Container();
     this.botaoFechar = new JButton("Fechar");
     this.botaoFechar.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -36,13 +38,12 @@ public class TelaProdutosEmFalta extends JDialog {
     this.container.add(this.containerProdutos);
     this.container.add(this.botaoFechar);
 
-    this.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
-    this.pack();
-    this.setVisible(true);
+    this.dialog.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
+    this.dialog.pack();
+    this.dialog.setVisible(true);
   }
 
   private void handleAction(ActionEvent event) {
-    this.setVisible(false);
-    this.dispose();
+    this.dialog.setVisible(false);
   }
 }

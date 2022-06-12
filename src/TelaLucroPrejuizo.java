@@ -8,19 +8,17 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 
 public class TelaLucroPrejuizo {
-  private final JDialog dialog;
   private final Dados dados;
-  private final Container container, containerProdutos;
-  private final JButton botaoFechar;
+  private final JDialog dialog;
 
-  public TelaLucroPrejuizo(TelaOpcoes dono, JDialog dialog, Dados dados) {
+  private final Container containerProdutos = new Container();
+  private final JButton botaoFechar = new JButton("Fechar");
+
+  public TelaLucroPrejuizo(Dados dados, JDialog dialog, TelaOpcoes dono) {
     this.dados = dados;
     this.dialog = dialog;
     this.dialog.setTitle("Mostrar lucro/prejuízo");
 
-    this.container = this.dialog.getContentPane();
-    this.containerProdutos = new Container();
-    this.botaoFechar = new JButton("Fechar");
     this.botaoFechar.setAlignmentX(Component.CENTER_ALIGNMENT);
     this.botaoFechar.addActionListener(this::handleAction);
 
@@ -35,11 +33,12 @@ public class TelaLucroPrejuizo {
       this.containerProdutos.add(new JLabel(String.format(msg, nome, descricao, precoVenda, qtdAtual)));
     }
 
-    this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
-    this.container.add(this.containerProdutos);
-    this.container.add(this.botaoFechar);
+    var container = this.dialog.getContentPane();
+    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+    container.add(this.containerProdutos);
+    container.add(this.botaoFechar);
 
-    this.dialog.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
+    this.dialog.setMinimumSize(new Dimension(600, container.getMinimumSize().height));
     this.dialog.pack();
     this.dialog.setVisible(true);
   }

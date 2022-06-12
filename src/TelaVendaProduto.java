@@ -65,9 +65,9 @@ public class TelaVendaProduto extends JDialog implements ActionListener, ListCel
       this.dados.estoque.atualizar(produto);
 
       var venda = new Venda(this.dados.funcionario.getEmail(), formaPagamento, 0d, produto.getPrecoVenda() * qtdC, LocalDate.now());
-      var codVenda = this.dados.vendaDao.adicionar(venda);
+      this.dados.vendaDao.adicionar(venda);
 
-      var item = new Item(codVenda, produto.getCodigo(), qtdC, produto.getPrecoVenda());
+      var item = new Item(venda.getCodigo(), produto.getCodigo(), qtdC, produto.getPrecoVenda());
       this.dados.itemDao.adicionar(item);
 
       this.setVisible(false);

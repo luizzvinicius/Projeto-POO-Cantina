@@ -21,6 +21,7 @@ public class Produto {
 
   public Produto(String nome, String descricao, double precoVenda, double precoCompra, int qtdComprada,
       int estoqueMinimo) {
+    this.codigo = -1;
     this.nome = nome;
     this.descricao = descricao;
     this.precoVenda = precoVenda;
@@ -28,6 +29,10 @@ public class Produto {
     this.qtdAtual = qtdComprada;
     this.qtdComprada = qtdComprada;
     this.estoqueMinimo = estoqueMinimo;
+  }
+
+  public void setCodigo(int codigo) {
+    this.codigo = codigo;
   }
 
   public void adicionarQtd(int qtd) {
@@ -45,7 +50,9 @@ public class Produto {
   }
 
   public void validarParaAdicionar() throws ProdutoInvalidoException {
-    if (this.nome.isBlank()) {
+    if (this.codigo != -1) {
+      throw new ProdutoInvalidoException("Produto não pode ter um código");
+    } else if (this.nome.isBlank()) {
       throw new ProdutoInvalidoException("Nome não pode estar vazio");
     } else if (this.descricao.isBlank()) {
       throw new ProdutoInvalidoException("Descrição não pode estar vazia");

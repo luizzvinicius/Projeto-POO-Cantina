@@ -22,11 +22,10 @@ public class ProdutoDao {
     this.conexao = conexao;
   }
 
-  public int adicionar(Produto produto) throws ProdutoInvalidoException {
+  public void adicionar(Produto produto) throws ProdutoInvalidoException {
     produto.validarParaAdicionar();
 
-    try {
-      var stmt = this.conexao.prepareStatement(COMANDO_ADICIONAR, Statement.RETURN_GENERATED_KEYS);
+    try (var stmt = this.conexao.prepareStatement(COMANDO_ADICIONAR, Statement.RETURN_GENERATED_KEYS)) {
       stmt.setString(1, produto.getNome());
       stmt.setString(2, produto.getDescricao());
       stmt.setDouble(3, produto.getPrecoVenda());
@@ -36,9 +35,9 @@ public class ProdutoDao {
       stmt.setInt(7, produto.getEstoqueMinimo());
       stmt.execute();
 
-      var rs = stmt.getGeneratedKeys();
-      rs.next();
-      return rs.getInt(1);
+      var result = stmt.getGeneratedKeys();
+      result.next();
+      produto.setCodigo(result.getInt(1));
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }
@@ -51,8 +50,7 @@ public class ProdutoDao {
   public List<Produto> getProdutos(String propriedade, boolean decrescente) {
     var produtos = new ArrayList<Produto>();
 
-    try {
-      var stmt = this.conexao.prepareStatement(COMANDO_GET_PRODUTOS);
+    try (var stmt = this.conexao.prepareStatement(COMANDO_GET_PRODUTOS)) {
       stmt.setString(1, propriedade);
       stmt.setString(2, decrescente ? "desc" : "asc");
       var result = stmt.executeQuery();
@@ -79,8 +77,7 @@ public class ProdutoDao {
   }
 
   public void atualizar(Produto produto) {
-    try {
-      var stmt = this.conexao.prepareStatement(COMANDO_ATUALIZAR);
+    try (var stmt = this.conexao.prepareStatement(COMANDO_ATUALIZAR)) {
       stmt.setInt(1, produto.getQtdAtual());
       stmt.setInt(2, produto.getQtdVendida());
       stmt.setInt(3, produto.getQtdComprada());
@@ -92,8 +89,7 @@ public class ProdutoDao {
   }
 
   public void remover(Produto produto) {
-    try {
-      var stmt = this.conexao.prepareStatement(COMANDO_REMOVER);
+    try (var stmt = this.conexao.prepareStatement(COMANDO_REMOVER)) {
       stmt.setInt(1, produto.getCodigo());
       stmt.execute();
     } catch (SQLException e) {

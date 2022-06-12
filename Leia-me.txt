@@ -3,8 +3,8 @@
 - Luiz Vinícius Márdelle Costa Silva
 - Mayllon Emmanoel Pequeno Santos Silva
 
-Todos os requisitos do projeto foram atendidos
+# Todos os requisitos do projeto foram atendidos
 
-Requisitos para o funcionamento:
+# Requisitos para o funcionamento:
 - ativar o servidor Apache e MYSQL no xampp
 - executar o programa (o banco é criado automaticamente)

@@ -13,17 +13,17 @@ public class TelaOpcoes {
   private static final String[] DESCRICOES_OPCOES_DESLOGADO = new String[] { "Entrar", "Cadastrar" };
 
   private static final Opcao[] FUNCOES_OPCOES_DESLOGADO = new Opcao[] {
-      TelaLoginFuncionario::new, TelaCadastroFuncionario::new
+      TelaEntrarComoFuncionario::new, TelaCadastrarFuncionario::new
   };
 
   private static final String[] DESCRICOES_OPCOES = new String[] {
-      "Cadastrar produto", "Vender produto", "Adicionar quantidade ao produto", "Remover produto", "Resumir estoque",
-      "Ver produtos em falta", "Mostrar lucro/prejuízo", "Sair da conta"
+      "Cadastrar produto", "Vender produto", "Adicionar quantidade de produto", "Remover produto", "Resumir estoque",
+      "Mostrar produtos em falta", "Mostrar lucro/prejuízo", "Sair da conta"
   };
 
   private static final Opcao[] FUNCOES_OPCOES = new Opcao[] {
-      TelaCadastroProduto::new, TelaVendaProduto::new, TelaAdicionarQtdProduto::new, TelaRemocaoProduto::new,
-      TelaResumirEstoque::new, TelaProdutosEmFalta::new, TelaLucroPrejuizo::new, TelaOpcoes::sairDaConta
+      TelaCadastrarProduto::new, TelaVenderProduto::new, TelaAdicionarQtdProduto::new, TelaRemoverProduto::new,
+      TelaResumirEstoque::new, TelaMostrarProdutosEmFalta::new, TelaMostrarLucroPrejuizo::new, TelaOpcoes::sairDaConta
   };
 
   private final Dados dados;

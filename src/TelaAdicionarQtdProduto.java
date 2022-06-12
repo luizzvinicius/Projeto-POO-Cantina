@@ -16,7 +16,7 @@ public class TelaAdicionarQtdProduto {
   private final JDialog dialog;
 
   private final Container containerCampos = new Container();
-  private final JButton botaoContinuar = new JButton("Continuar");
+  private final JButton botaoAdicionar = new JButton("Adicionar");
   private final JTextField campoQtd = new JTextField();
   private final JComboBox<Produto> seletorProduto = new JComboBox<>();
   private final JLabel labelErro = new JLabel();
@@ -26,8 +26,8 @@ public class TelaAdicionarQtdProduto {
     this.dialog = dialog;
     this.dialog.setTitle("Adicionar quantidade ao produto");
 
-    this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoContinuar.addActionListener(this::handleAction);
+    this.botaoAdicionar.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.botaoAdicionar.addActionListener(this::handleAction);
     this.seletorProduto.setRenderer(this::renderizarProduto);
     this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -44,7 +44,7 @@ public class TelaAdicionarQtdProduto {
     var container = this.dialog.getContentPane();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     container.add(this.containerCampos);
-    container.add(this.botaoContinuar);
+    container.add(this.botaoAdicionar);
     container.add(this.labelErro);
 
     this.dialog.setMinimumSize(new Dimension(600, container.getMinimumSize().height));

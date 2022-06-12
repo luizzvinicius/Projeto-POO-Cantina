@@ -15,7 +15,7 @@ public class TelaRemocaoProduto {
   private final JDialog dialog;
 
   private final Container containerCampos = new Container();
-  private final JButton botaoContinuar = new JButton("Continuar");
+  private final JButton botaoRemover = new JButton("Remover");
   private final JComboBox<Produto> seletorProduto = new JComboBox<>();
   private final JLabel labelErro = new JLabel();
 
@@ -24,8 +24,8 @@ public class TelaRemocaoProduto {
     this.dialog = dialog;
     this.dialog.setTitle("Remover produto");
 
-    this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoContinuar.addActionListener(this::handleAction);
+    this.botaoRemover.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.botaoRemover.addActionListener(this::handleAction);
     this.seletorProduto.setRenderer(this::renderizarProduto);
     this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -36,7 +36,7 @@ public class TelaRemocaoProduto {
     var container = this.dialog.getContentPane();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     container.add(this.containerCampos);
-    container.add(this.botaoContinuar);
+    container.add(this.botaoRemover);
     container.add(this.labelErro);
 
     for (var produto : this.dados.estoque.getProdutos()) {

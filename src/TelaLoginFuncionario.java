@@ -16,7 +16,7 @@ public class TelaLoginFuncionario {
   private final TelaOpcoes dono;
 
   private final Container containerCampos = new Container();
-  private final JButton botaoContinuar = new JButton("Continuar");
+  private final JButton botaoEntrar = new JButton("Entrar");
   private final JTextField campoEmail = new JTextField();
   private final JTextField campoSenha = new JTextField();
   private final JLabel labelErro = new JLabel();
@@ -27,8 +27,8 @@ public class TelaLoginFuncionario {
     this.dialog = dialog;
     this.dialog.setTitle("Entrar como funcionário");
 
-    this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoContinuar.addActionListener(this::handleAction);
+    this.botaoEntrar.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.botaoEntrar.addActionListener(this::handleAction);
     this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     this.containerCampos.setLayout(new GridLayout(0, 2));
@@ -40,7 +40,7 @@ public class TelaLoginFuncionario {
     var container = this.dialog.getContentPane();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     container.add(this.containerCampos);
-    container.add(this.botaoContinuar);
+    container.add(this.botaoEntrar);
     container.add(this.labelErro);
 
     this.dialog.setMinimumSize(new Dimension(300, container.getMinimumSize().height));

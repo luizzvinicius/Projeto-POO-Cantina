@@ -19,7 +19,7 @@ public class TelaCadastroProduto extends JDialog {
     this.containerCampos = new Container();
     this.botaoCadastrar = new JButton("Cadastrar");
     this.botaoCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoCadastrar.addActionListener(this::actionPerformed);
+    this.botaoCadastrar.addActionListener(this::handleAction);
     this.campoDescricao = new JTextField();
     this.campoNome = new JTextField();
     this.campoPrecoCompra = new JTextField();
@@ -53,7 +53,7 @@ public class TelaCadastroProduto extends JDialog {
     this.setVisible(true);
   }
 
-  private void actionPerformed(ActionEvent event) {
+  private void handleAction(ActionEvent event) {
     var nome = this.campoNome.getText();
     var descricao = this.campoDescricao.getText();
     var precoCompra = this.campoPrecoCompra.getText();

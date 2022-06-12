@@ -20,7 +20,7 @@ public class TelaCadastroFuncionario extends JDialog {
     this.containerCampos = new Container();
     this.botaoCadastrar = new JButton("Cadastrar");
     this.botaoCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoCadastrar.addActionListener(this::actionPerformed);
+    this.botaoCadastrar.addActionListener(this::handleAction);
     this.campoEmail = new JTextField();
     this.campoNome = new JTextField();
     this.campoSenha = new JTextField();
@@ -45,7 +45,7 @@ public class TelaCadastroFuncionario extends JDialog {
     this.setVisible(true);
   }
 
-  private void actionPerformed(ActionEvent event) {
+  private void handleAction(ActionEvent event) {
     String email = this.campoEmail.getText();
     String nome = this.campoSenha.getText();
     String senha = this.campoSenha.getText();

@@ -59,7 +59,7 @@ public class TelaOpcoes {
       var botao = new JButton(this.descricoesOpcoes[i]);
       botao.setAlignmentX(Component.CENTER_ALIGNMENT);
       botao.setMaximumSize(new Dimension(300, this.frame.getMaximumSize().height));
-      botao.addActionListener(this::actionPerformed);
+      botao.addActionListener(this::handleAction);
       botao.setActionCommand(Integer.toString(i));
       this.container.add(botao);
     }
@@ -77,7 +77,7 @@ public class TelaOpcoes {
     return this.frame;
   }
 
-  private void actionPerformed(ActionEvent event) {
+  private void handleAction(ActionEvent event) {
     var opcao = Integer.parseInt(event.getActionCommand());
     this.funcoesOpcoes[opcao].rodar(this, this.dados);
   }

@@ -24,7 +24,7 @@ public class TelaAdicionarQtdProduto {
   public TelaAdicionarQtdProduto(Dados dados, JDialog dialog, TelaOpcoes dono) {
     this.dados = dados;
     this.dialog = dialog;
-    this.dialog.setTitle("Adicionar quantidade ao produto");
+    this.dialog.setTitle("Adicionar quantidade de produto");
 
     this.botaoAdicionar.setAlignmentX(Component.CENTER_ALIGNMENT);
     this.botaoAdicionar.addActionListener(this::handleAction);

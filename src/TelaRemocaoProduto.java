@@ -1,19 +1,21 @@
-  import java.awt.*;
+import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaRemocaoProduto extends JDialog {
+public class TelaRemocaoProduto {
+  private final JDialog dialog;
   private final Dados dados;
   private final Container container, containerCampos;
   private final JButton botaoContinuar;
   private final JComboBox<Produto> seletorProduto;
   private final JLabel labelErro;
 
-  public TelaRemocaoProduto(TelaOpcoes dono, Dados dados) {
-    super(dono.getFrame(), "Remover produto", true);
+  public TelaRemocaoProduto(TelaOpcoes dono, JDialog dialog, Dados dados) {
     this.dados = dados;
+    this.dialog = dialog;
+    this.dialog.setTitle("Remover produto");
 
-    this.container = this.getContentPane();
+    this.container = this.dialog.getContentPane();
     this.containerCampos = new Container();
     this.botaoContinuar = new JButton("Continuar");
     this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -36,16 +38,15 @@ public class TelaRemocaoProduto extends JDialog {
       this.seletorProduto.addItem(produto);
     }
 
-    this.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
-    this.pack();
-    this.setVisible(true);
+    this.dialog.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
+    this.dialog.pack();
+    this.dialog.setVisible(true);
   }
 
   private void handleAction(ActionEvent event) {
     var produto = (Produto) this.seletorProduto.getSelectedItem();
     this.dados.estoque.remover(produto);
-    this.setVisible(false);
-    this.dispose();
+    this.dialog.setVisible(false);
   }
 
   private Component renderizarProduto(JList<? extends Produto> list, Produto value, int index,

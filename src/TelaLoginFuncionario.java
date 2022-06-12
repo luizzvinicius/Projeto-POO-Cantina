@@ -3,7 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaLoginFuncionario extends JDialog {
+public class TelaLoginFuncionario {
+  private final JDialog dialog;
   private final TelaOpcoes dono;
   private final Dados dados;
   private final Container container, containerCampos;
@@ -11,12 +12,13 @@ public class TelaLoginFuncionario extends JDialog {
   private final JTextField campoEmail, campoSenha;
   private final JLabel labelErro;
 
-  public TelaLoginFuncionario(TelaOpcoes dono, Dados dados) {
-    super(dono.getFrame(), "Entrar como funcionário", true);
-    this.dono = dono;
+  public TelaLoginFuncionario(TelaOpcoes dono, JDialog dialog, Dados dados) {
     this.dados = dados;
+    this.dono = dono;
+    this.dialog = dialog;
+    this.dialog.setTitle("Entrar como funcionário");
 
-    this.container = this.getContentPane();
+    this.container = this.dialog.getContentPane();
     this.containerCampos = new Container();
     this.botaoEntrar = new JButton("Entrar");
     this.botaoEntrar.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -37,9 +39,9 @@ public class TelaLoginFuncionario extends JDialog {
     this.container.add(this.botaoEntrar);
     this.container.add(this.labelErro);
 
-    this.setMinimumSize(new Dimension(300, this.container.getMinimumSize().height));
-    this.pack();
-    this.setVisible(true);
+    this.dialog.setMinimumSize(new Dimension(300, this.container.getMinimumSize().height));
+    this.dialog.pack();
+    this.dialog.setVisible(true);
   }
 
   private void handleAction(ActionEvent event) {
@@ -50,11 +52,10 @@ public class TelaLoginFuncionario extends JDialog {
       var funcionario = this.dados.funcionarios.entrar(email, senha);
       this.dados.funcionario = funcionario;
       this.dono.atualizarBotoes();
-      this.setVisible(false);
-      this.dispose();
+      this.dialog.setVisible(false);
     } catch (FuncionarioOpException e) {
       this.labelErro.setText(e.getMessage());
-      this.pack();
+      this.dialog.pack();
     }
   }
 }

@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaResumirEstoque extends JDialog implements ActionListener {
+public class TelaResumirEstoque extends JDialog {
   private final Dados dados;
   private final Container container, containerProdutos;
   private final JButton botaoResumir;
@@ -10,14 +10,14 @@ public class TelaResumirEstoque extends JDialog implements ActionListener {
   private final String[] FORMAS = new String[] { "Nome", "Descrição", "Quantidade" };
 
   public TelaResumirEstoque(TelaOpcoes dono, Dados dados) {
-    super(dono, "Resumir estoque", true);
+    super(dono.getFrame(), "Resumir estoque", true);
 
     this.dados = dados;
     this.container = this.getContentPane();
     this.containerProdutos = new Container();
     this.botaoResumir = new JButton("Resumir estoque");
     this.botaoResumir.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoResumir.addActionListener(this);
+    this.botaoResumir.addActionListener(this::actionPerformed);
     this.seletorFormasOrdenacao = new JComboBox<>(FORMAS);
     this.containerProdutos.setLayout(new BoxLayout(this.containerProdutos, BoxLayout.Y_AXIS));
 
@@ -31,8 +31,7 @@ public class TelaResumirEstoque extends JDialog implements ActionListener {
     this.setVisible(true);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent e) {
+  private void actionPerformed(ActionEvent e) {
     var escolha = this.seletorFormasOrdenacao.getSelectedIndex();
 
     String propriedade = null;

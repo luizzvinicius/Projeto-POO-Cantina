@@ -31,52 +31,6 @@ public class Produto {
     this.estoqueMinimo = estoqueMinimo;
   }
 
-  public void setCodigo(int codigo) {
-    this.codigo = codigo;
-  }
-
-  public void adicionarQtd(int qtd) {
-    this.qtdAtual += qtd;
-    this.qtdComprada += qtd;
-  }
-
-  public void venderQtd(int qtd) throws VendaInvalidaException {
-    if (qtd > qtdAtual) {
-      throw new VendaInvalidaException("Sem itens disponíveis");
-    }
-
-    this.qtdAtual -= qtd;
-    this.qtdVendida += qtd;
-  }
-
-  public void validarParaAdicionar() throws ProdutoInvalidoException {
-    if (this.codigo != -1) {
-      throw new ProdutoInvalidoException("Produto não pode ter um código");
-    } else if (this.nome.isBlank()) {
-      throw new ProdutoInvalidoException("Nome não pode estar vazio");
-    } else if (this.descricao.isBlank()) {
-      throw new ProdutoInvalidoException("Descrição não pode estar vazia");
-    } else if (this.precoCompra <= 0) {
-      throw new ProdutoInvalidoException("Preço de compra deve ser maior que zero");
-    } else if (this.precoVenda < this.precoCompra * 1.1) {
-      throw new ProdutoInvalidoException("Preço de venda não pode ser menor que preço de compra");
-    } else if (this.qtdComprada <= 0) {
-      throw new ProdutoInvalidoException("Quantidade inicial deve ser maior que zero");
-    }
-  }
-
-  public static int compararPeloNome(Produto p1, Produto p2) {
-    return p1.getNome().compareToIgnoreCase(p2.getNome());
-  }
-
-  public static int compararPelaDescricao(Produto p1, Produto p2) {
-    return p1.getDescricao().compareToIgnoreCase(p2.getDescricao());
-  }
-
-  public static int compararPelaQtdDecrescente(Produto p1, Produto p2) {
-    return p2.getQtdAtual() - p1.getQtdAtual();
-  }
-
   public int getCodigo() {
     return this.codigo;
   }
@@ -111,5 +65,39 @@ public class Produto {
 
   public int getEstoqueMinimo() {
     return this.estoqueMinimo;
+  }
+
+  public void setCodigo(int codigo) {
+    this.codigo = codigo;
+  }
+
+  public void adicionarQtd(int qtd) {
+    this.qtdAtual += qtd;
+    this.qtdComprada += qtd;
+  }
+
+  public void venderQtd(int qtd) throws VendaInvalidaException {
+    if (qtd > qtdAtual) {
+      throw new VendaInvalidaException("Sem itens disponíveis");
+    }
+
+    this.qtdAtual -= qtd;
+    this.qtdVendida += qtd;
+  }
+
+  public void validarParaAdicionar() throws ProdutoInvalidoException {
+    if (this.codigo != -1) {
+      throw new ProdutoInvalidoException("Produto não pode ter um código");
+    } else if (this.nome.isBlank()) {
+      throw new ProdutoInvalidoException("Nome não pode estar vazio");
+    } else if (this.descricao.isBlank()) {
+      throw new ProdutoInvalidoException("Descrição não pode estar vazia");
+    } else if (this.precoCompra <= 0) {
+      throw new ProdutoInvalidoException("Preço de compra deve ser maior que zero");
+    } else if (this.precoVenda < this.precoCompra * 1.1) {
+      throw new ProdutoInvalidoException("Preço de venda não pode ser menor que preço de compra");
+    } else if (this.qtdComprada <= 0) {
+      throw new ProdutoInvalidoException("Quantidade inicial deve ser maior que zero");
+    }
   }
 }

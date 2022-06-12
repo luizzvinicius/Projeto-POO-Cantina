@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaAdicionarQtdProduto extends JDialog implements ActionListener, ListCellRenderer<Produto> {
+public class TelaAdicionarQtdProduto extends JDialog {
   private final Dados dados;
   private final Container container, containerCampos;
   private final JButton botaoContinuar;
@@ -11,17 +11,17 @@ public class TelaAdicionarQtdProduto extends JDialog implements ActionListener, 
   private final JLabel labelErro;
 
   public TelaAdicionarQtdProduto(TelaOpcoes dono, Dados dados) {
-    super(dono, "Adicionar quantidade ao produto", true);
+    super(dono.getFrame(), "Adicionar quantidade ao produto", true);
     this.dados = dados;
 
     this.container = this.getContentPane();
     this.containerCampos = new Container();
     this.botaoContinuar = new JButton("Continuar");
     this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoContinuar.addActionListener(this);
+    this.botaoContinuar.addActionListener(this::actionPerformed);
     this.campoQtd = new JTextField();
     this.seletorProduto = new JComboBox<>();
-    this.seletorProduto.setRenderer(this);
+    this.seletorProduto.setRenderer(this::getListCellRendererComponent);
     this.labelErro = new JLabel();
     this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -45,8 +45,7 @@ public class TelaAdicionarQtdProduto extends JDialog implements ActionListener, 
     this.setVisible(true);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent event) {
+  private void actionPerformed(ActionEvent event) {
     var produto = (Produto) this.seletorProduto.getSelectedItem();
     var qtd = this.campoQtd.getText();
 
@@ -62,8 +61,7 @@ public class TelaAdicionarQtdProduto extends JDialog implements ActionListener, 
     }
   }
 
-  @Override
-  public Component getListCellRendererComponent(JList<? extends Produto> list, Produto value, int index,
+  private Component getListCellRendererComponent(JList<? extends Produto> list, Produto value, int index,
       boolean isSelected, boolean cellHasFocus) {
     var msg = "%s, descrição: %s, preço de venda: R$ %.2f, quantidade: %d";
     var nome = value.getNome();

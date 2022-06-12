@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaCadastroProduto extends JDialog implements ActionListener {
+public class TelaCadastroProduto extends JDialog {
   private final Dados dados;
   private final Container container, containerCampos;
   private final JButton botaoCadastrar;
@@ -12,14 +12,14 @@ public class TelaCadastroProduto extends JDialog implements ActionListener {
   private final JLabel labelErro;
 
   public TelaCadastroProduto(TelaOpcoes dono, Dados dados) {
-    super(dono, "Cadastrar produto", true);
+    super(dono.getFrame(), "Cadastrar produto", true);
     this.dados = dados;
 
     this.container = this.getContentPane();
     this.containerCampos = new Container();
     this.botaoCadastrar = new JButton("Cadastrar");
     this.botaoCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoCadastrar.addActionListener(this);
+    this.botaoCadastrar.addActionListener(this::actionPerformed);
     this.campoDescricao = new JTextField();
     this.campoNome = new JTextField();
     this.campoPrecoCompra = new JTextField();
@@ -53,8 +53,7 @@ public class TelaCadastroProduto extends JDialog implements ActionListener {
     this.setVisible(true);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent event) {
+  private void actionPerformed(ActionEvent event) {
     var nome = this.campoNome.getText();
     var descricao = this.campoDescricao.getText();
     var precoCompra = this.campoPrecoCompra.getText();

@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaOpcoes extends JFrame implements ActionListener {
+public class TelaOpcoes {
   private static final String[] DESCRICOES_OPCOES_DESLOGADO = new String[] { "Entrar", "Cadastrar" };
 
   private static final Opcao[] FUNCOES_OPCOES_DESLOGADO = new Opcao[] {
@@ -11,30 +11,33 @@ public class TelaOpcoes extends JFrame implements ActionListener {
 
   private static final String[] DESCRICOES_OPCOES = new String[] {
       "Cadastrar produto", "Vender produto", "Adicionar quantidade ao produto", "Remover produto", "Resumir estoque",
-      "Ver produtos em falta", "Mostrar lucro/prejuízo", "Sair da conta" };
+      "Ver produtos em falta", "Mostrar lucro/prejuízo", "Sair da conta"
+  };
 
   private static final Opcao[] FUNCOES_OPCOES = new Opcao[] {
       TelaCadastroProduto::new, TelaVendaProduto::new, TelaAdicionarQtdProduto::new, TelaRemocaoProduto::new,
-      TelaResumirEstoque::new, TelaProdutosEmFalta::new, TelaLucroPrejuizo::new, TelaOpcoes::sairDaConta };
-  
+      TelaResumirEstoque::new, TelaProdutosEmFalta::new, TelaLucroPrejuizo::new, TelaOpcoes::sairDaConta
+  };
+
+  private final JFrame frame;
   private final Dados dados;
   private final Container container;
   private String[] descricoesOpcoes;
   private Opcao[] funcoesOpcoes;
 
   public TelaOpcoes() {
-    super("Cantina IFAL");
+    this.frame = new JFrame("Cantina IFAL");
     this.dados = new Dados();
-    this.container = this.getContentPane();
+    this.container = this.frame.getContentPane();
     this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
     this.atualizarBotoes();
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
     var dimension = Toolkit.getDefaultToolkit().getScreenSize();
-    int x = (int) ((dimension.getWidth() - this.getWidth()) / 2);
-    int y = (int) ((dimension.getHeight() - this.getHeight()) / 2);
-    this.setLocation(x, y);
-    this.setVisible(true);
+    int x = (int) ((dimension.getWidth() - this.frame.getWidth()) / 2);
+    int y = (int) ((dimension.getHeight() - this.frame.getHeight()) / 2);
+    this.frame.setLocation(x, y);
+    this.frame.setVisible(true);
   }
 
   public void atualizarBotoes() {
@@ -49,20 +52,20 @@ public class TelaOpcoes extends JFrame implements ActionListener {
       this.funcoesOpcoes = FUNCOES_OPCOES;
     } else {
       this.descricoesOpcoes = DESCRICOES_OPCOES_DESLOGADO;
-      this.funcoesOpcoes = FUNCOES_OPCOES_DESLOGADO;  
+      this.funcoesOpcoes = FUNCOES_OPCOES_DESLOGADO;
     }
 
     for (var i = 0; i < this.descricoesOpcoes.length; i++) {
       var botao = new JButton(this.descricoesOpcoes[i]);
       botao.setAlignmentX(Component.CENTER_ALIGNMENT);
-      botao.setMaximumSize(new Dimension(300, this.getMaximumSize().height));
-      botao.addActionListener(this);
+      botao.setMaximumSize(new Dimension(300, this.frame.getMaximumSize().height));
+      botao.addActionListener(this::actionPerformed);
       botao.setActionCommand(Integer.toString(i));
       this.container.add(botao);
     }
 
-    this.setMinimumSize(new Dimension(300, this.getMinimumSize().height));
-    this.pack();
+    this.frame.setMinimumSize(new Dimension(300, this.frame.getMinimumSize().height));
+    this.frame.pack();
   }
 
   private static void sairDaConta(TelaOpcoes telaOpcoes, Dados dados) {
@@ -70,8 +73,11 @@ public class TelaOpcoes extends JFrame implements ActionListener {
     telaOpcoes.atualizarBotoes();
   }
 
-  @Override
-  public void actionPerformed(ActionEvent event) {
+  public JFrame getFrame() {
+    return this.frame;
+  }
+
+  private void actionPerformed(ActionEvent event) {
     var opcao = Integer.parseInt(event.getActionCommand());
     this.funcoesOpcoes[opcao].rodar(this, this.dados);
   }

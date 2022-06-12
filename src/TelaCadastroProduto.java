@@ -69,8 +69,8 @@ public class TelaCadastroProduto extends JDialog implements ActionListener {
       var estoqueMinimoC = Integer.parseUnsignedInt(estoqueMinimo);
 
       var produto = new Produto(nome, descricao, precoVendaC, precoCompraC, qtdInicialC, estoqueMinimoC);
-      var codProduto = this.dados.estoque.adicionar(produto);
-      this.dados.cadastraDao.adicionar(this.dados.funcionario, codProduto);
+      this.dados.estoque.adicionar(produto);
+      this.dados.cadastraDao.adicionar(this.dados.funcionario, produto);
       this.setVisible(false);
       this.dispose();
     } catch (NumberFormatException | ProdutoInvalidoException e) {

@@ -1,16 +1,16 @@
 import java.time.LocalDate;
 
 public class Venda {
+  private int codigo;
   private String formaPagamento, emailFunc;
-  private int codVenda;
-  private double desconto, totVenda;
+  private double desconto, totalVenda;
   private LocalDate dataVenda;
 
-  public Venda(String emailFunc, String formaPagamento, double desconto, double totVenda, LocalDate dataVenda) {
+  public Venda(String emailFunc, String formaPagamento, double desconto, double totalVenda, LocalDate dataVenda) {
     this.emailFunc = emailFunc;
     this.formaPagamento = formaPagamento;
     this.desconto = desconto;
-    this.totVenda = totVenda;
+    this.totalVenda = totalVenda;
     this.dataVenda = dataVenda;
   }
 
@@ -18,8 +18,8 @@ public class Venda {
     return formaPagamento;
   }
 
-  public int getCodVenda() {
-    return codVenda;
+  public int getCodigo() {
+    return codigo;
   }
 
   public String getEmailFunc() {
@@ -30,27 +30,15 @@ public class Venda {
     return desconto;
   }
 
-  public double getTotVenda() {
-    return totVenda;
+  public double getTotalVenda() {
+    return totalVenda;
   }
 
   public LocalDate getDataVenda() {
     return dataVenda;
   }
 
-  public void setCodVenda(int codVenda) {
-    this.codVenda = codVenda;
-  }
-
-  public void setDesconto(double desconto) {
-    this.desconto = desconto;
-  }
-
-  public void setTotVenda(double totVenda) {
-    this.totVenda = totVenda;
-  }
-
-  public void setDataVenda(LocalDate dataVenda) {
-    this.dataVenda = dataVenda;
+  public void setCodigo(int codigo) {
+    this.codigo = codigo;
   }
 }

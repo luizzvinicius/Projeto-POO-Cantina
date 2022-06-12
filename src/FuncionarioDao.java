@@ -32,11 +32,11 @@ public class FuncionarioDao {
       stmt.setString(2, senha);
       var result = stmt.executeQuery();
 
-      if (!result.next()) {
-        throw new FuncionarioOpException("Email/ou senha incorretos");
+      if (result.next()) {
+        return new Funcionario(result.getString("nome"), email, senha);
       }
 
-      return new Funcionario(result.getString("nome"), email, senha);
+      throw new FuncionarioOpException("Email/ou senha incorretos");
     } catch (SQLException e) {
       throw new RuntimeException(e);
     }

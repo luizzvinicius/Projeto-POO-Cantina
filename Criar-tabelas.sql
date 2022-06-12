@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS Item (
   codigo INT(8) AUTO_INCREMENT,
   cod_venda INT(8),
   cod_produto INT(8),
-  qtdidade INT(8),
+  qtd INT(8),
   preco DECIMAL(10, 2),
   PRIMARY KEY (codigo),
   FOREIGN KEY (cod_venda) REFERENCES Venda (codigo),

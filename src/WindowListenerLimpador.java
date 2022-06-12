@@ -7,41 +7,41 @@ import javax.swing.JDialog;
 public class WindowListenerLimpador implements WindowListener {
   private final Container container;
   private final LayoutManager layoutManagerOriginal;
-  
+
   public WindowListenerLimpador(JDialog dialog) {
     this.container = dialog.getContentPane();
     this.layoutManagerOriginal = this.container.getLayout();
   }
 
   @Override
-  public void windowActivated(WindowEvent e) {
-    
+  public void windowActivated(WindowEvent event) {
+
   }
 
   @Override
-  public void windowClosed(WindowEvent e) {
-    
+  public void windowClosed(WindowEvent event) {
+
   }
 
   @Override
-  public void windowClosing(WindowEvent e) {
+  public void windowClosing(WindowEvent event) {
   }
 
   @Override
-  public void windowDeactivated(WindowEvent e) {
+  public void windowDeactivated(WindowEvent event) {
     this.container.removeAll();
     this.container.setLayout(this.layoutManagerOriginal);
   }
 
   @Override
-  public void windowDeiconified(WindowEvent e) {
+  public void windowDeiconified(WindowEvent event) {
   }
 
   @Override
-  public void windowIconified(WindowEvent e) {
+  public void windowIconified(WindowEvent event) {
   }
 
   @Override
-  public void windowOpened(WindowEvent e) {
+  public void windowOpened(WindowEvent event) {
   }
 }

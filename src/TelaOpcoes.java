@@ -9,7 +9,9 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 public class TelaOpcoes {
-  private static final String[] DESCRICOES_OPCOES_DESLOGADO = new String[] { "Entrar", "Cadastrar" };
+  private static final String[] DESCRICOES_OPCOES_DESLOGADO = new String[] {
+      "Entrar como funcionário", "Cadastrar funcionário"
+  };
 
   private static final Opcao[] FUNCOES_OPCOES_DESLOGADO = new Opcao[] {
       TelaEntrarComoFuncionario::new, TelaCadastrarFuncionario::new
@@ -29,18 +31,16 @@ public class TelaOpcoes {
   private String[] descricoesOpcoes;
   private Opcao[] funcoesOpcoes;
 
-  private final JFrame frame;
-  private final JDialog dialog;
+  private final JFrame frame = new JFrame("Cantina IFAL");
   private final Container container;
+  private final JDialog dialog = new JDialog(this.frame, true);
 
   public TelaOpcoes() {
     this.dados = new Dados();
-    this.frame = new JFrame("Cantina IFAL");
     this.frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    this.dialog = new JDialog(this.frame, true);
+    this.container = this.frame.getContentPane();
     this.dialog.addWindowListener(new WindowListenerLimpador(this.dialog));
 
-    this.container = this.frame.getContentPane();
     this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
     this.atualizarBotoes();
     this.frame.setLocationRelativeTo(null);
@@ -66,7 +66,7 @@ public class TelaOpcoes {
       var botao = new JButton(this.descricoesOpcoes[i]);
       botao.setAlignmentX(Component.CENTER_ALIGNMENT);
       botao.setMaximumSize(new Dimension(300, this.frame.getMaximumSize().height));
-      botao.addActionListener(this::handleAction);
+      botao.addActionListener(this::apertouBotao);
       botao.setActionCommand(Integer.toString(i));
       this.container.add(botao);
     }
@@ -80,7 +80,7 @@ public class TelaOpcoes {
     telaOpcoes.atualizarBotoes();
   }
 
-  private void handleAction(ActionEvent event) {
+  private void apertouBotao(ActionEvent event) {
     var opcao = Integer.parseInt(event.getActionCommand());
     this.funcoesOpcoes[opcao].rodar(this.dados, this.dialog, this);
   }

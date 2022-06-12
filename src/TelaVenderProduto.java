@@ -1,65 +1,39 @@
 import exceptions.VendaInvalidaException;
 import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.time.LocalDate;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextField;
 
-public class TelaVenderProduto {
+public class TelaVenderProduto extends TelaFormulario {
   private static final String[] FORMAS = new String[] { "Dinheiro", "Cartão de crédito", "Cartão de débito", "Pix" };
 
-  private final Dados dados;
-  private final JDialog dialog;
-
-  private final Container containerCampos = new Container();
-  private final JButton botaoVender = new JButton("Vender");
   private final JTextField campoQtd = new JTextField();
-  private final JLabel labelErro = new JLabel();
   private final JComboBox<Produto> seletorProduto = new JComboBox<>();
   private final JComboBox<String> seletorFormasPagamento = new JComboBox<>(FORMAS);
 
-  public TelaVenderProduto(Dados dados, JDialog dialog, TelaOpcoes dono) {
-    this.dados = dados;
-    this.dialog = dialog;
-    this.dialog.setTitle("Vender produto");
+  public TelaVenderProduto(Dados dados, JDialog dialog, TelaOpcoes telaOpcoes) {
+    super(dados, dialog);
 
-    this.botaoVender.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoVender.addActionListener(this::handleAction);
+    this.dialog.setTitle("Vender produto");
+    this.botaoContinuar.setText("Vender");
     this.seletorProduto.setRenderer(this::renderizarProduto);
-    this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.adicionarCampo("Produto:", this.seletorProduto);
+    this.adicionarCampo("Quantidade:", this.campoQtd);
+    this.adicionarCampo("Forma de pagamento:", this.seletorFormasPagamento);
 
     for (var produto : this.dados.estoque.getProdutos()) {
       this.seletorProduto.addItem(produto);
     }
 
-    this.containerCampos.setLayout(new GridLayout(0, 2));
-    this.containerCampos.add(new JLabel("Produto:"));
-    this.containerCampos.add(this.seletorProduto);
-    this.containerCampos.add(new JLabel("Quantidade:"));
-    this.containerCampos.add(this.campoQtd);
-    this.containerCampos.add(new JLabel("Forma de pagamento:"));
-    this.containerCampos.add(this.seletorFormasPagamento);
-
-    var container = this.dialog.getContentPane();
-    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-    container.add(this.containerCampos);
-    container.add(this.botaoVender);
-    container.add(this.labelErro);
-
-    this.dialog.setMinimumSize(new Dimension(600, container.getMinimumSize().height));
-    this.dialog.pack();
-    this.dialog.setVisible(true);
+    this.mostrar(600);
   }
 
-  private void handleAction(ActionEvent event) {
+  @Override
+  protected void apertouBotao(ActionEvent event) {
     var produto = (Produto) this.seletorProduto.getSelectedItem();
     var qtd = this.campoQtd.getText();
     var formaPagamento = (String) this.seletorFormasPagamento.getSelectedItem();

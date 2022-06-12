@@ -1,30 +1,12 @@
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
-public class TelaMostrarProdutosEmFalta {
-  private final Dados dados;
-  private final JDialog dialog;
-
-  private final Container containerProdutos = new Container();
-  private final JButton botaoFechar = new JButton("Fechar");
-
-  public TelaMostrarProdutosEmFalta(Dados dados, JDialog dialog, TelaOpcoes dono) {
-    this.dados = dados;
-    this.dialog = dialog;
+public class TelaMostrarProdutosEmFalta extends TelaInformacoesProdutos {
+  public TelaMostrarProdutosEmFalta(Dados dados, JDialog dialog, TelaOpcoes telaOpcoes) {
+    super(dialog);
     this.dialog.setTitle("Mostrar produtos em falta");
 
-    this.botaoFechar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoFechar.addActionListener(this::handleAction);
-
-    this.containerProdutos.setLayout(new BoxLayout(this.containerProdutos, BoxLayout.Y_AXIS));
-
-    for (var produto : this.dados.estoque.getProdutos()) {
+    for (var produto : dados.estoque.getProdutos()) {
       if (produto.getQtdAtual() > produto.getEstoqueMinimo()) {
         continue;
       }
@@ -37,17 +19,10 @@ public class TelaMostrarProdutosEmFalta {
       this.containerProdutos.add(new JLabel(String.format(msg, nome, descricao, precoVenda, qtdAtual)));
     }
 
-    var container = this.dialog.getContentPane();
-    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-    container.add(this.containerProdutos);
-    container.add(this.botaoFechar);
+    if (containerProdutos.getComponentCount() == 0) {
+      this.containerProdutos.add(new JLabel("Não há produtos em falta"));
+    }
 
-    this.dialog.setMinimumSize(new Dimension(600, container.getMinimumSize().height));
-    this.dialog.pack();
-    this.dialog.setVisible(true);
-  }
-
-  private void handleAction(ActionEvent event) {
-    this.dialog.setVisible(false);
+    this.mostrar(600);
   }
 }

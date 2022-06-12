@@ -1,64 +1,33 @@
 import exceptions.ProdutoInvalidoException;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class TelaCadastrarProduto {
-  private final Dados dados;
-  private final JDialog dialog;
-
-  private final Container containerCampos = new Container();
-  private final JButton botaoCadastrar = new JButton("Cadastrar");
+public class TelaCadastrarProduto extends TelaFormulario {
   private final JTextField campoDescricao = new JTextField();
   private final JTextField campoNome = new JTextField();
   private final JTextField campoPrecoCompra = new JTextField();
   private final JTextField campoPrecoVenda = new JTextField();
   private final JTextField campoQtdInicial = new JTextField();
   private final JTextField campoEstoqueMinimo = new JTextField();
-  private final JLabel labelErro = new JLabel();
 
-  public TelaCadastrarProduto(Dados dados, JDialog dialog, TelaOpcoes dono) {
-    this.dados = dados;
-    this.dialog = dialog;
+  public TelaCadastrarProduto(Dados dados, JDialog dialog, TelaOpcoes telaOpcoes) {
+    super(dados, dialog);
+
     this.dialog.setTitle("Cadastrar produto");
+    this.botaoContinuar.setText("Cadastrar");
+    this.adicionarCampo("Nome:", this.campoNome);
+    this.adicionarCampo("Descrição:", this.campoDescricao);
+    this.adicionarCampo("Preço de venda:", this.campoPrecoVenda);
+    this.adicionarCampo("Preço de compra:", this.campoPrecoCompra);
+    this.adicionarCampo("Quantidade inicial:", this.campoQtdInicial);
+    this.adicionarCampo("Estoque mínimo:", this.campoEstoqueMinimo);
 
-    this.botaoCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoCadastrar.addActionListener(this::handleAction);
-    this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-    this.containerCampos.setLayout(new GridLayout(0, 2));
-    this.containerCampos.add(new JLabel("Nome:"));
-    this.containerCampos.add(this.campoNome);
-    this.containerCampos.add(new JLabel("Descrição:"));
-    this.containerCampos.add(this.campoDescricao);
-    this.containerCampos.add(new JLabel("Preço de compra:"));
-    this.containerCampos.add(this.campoPrecoCompra);
-    this.containerCampos.add(new JLabel("Preço de venda:"));
-    this.containerCampos.add(this.campoPrecoVenda);
-    this.containerCampos.add(new JLabel("Quantidade inicial:"));
-    this.containerCampos.add(this.campoQtdInicial);
-    this.containerCampos.add(new JLabel("Estoque mínimo:"));
-    this.containerCampos.add(this.campoEstoqueMinimo);
-
-    var container = this.dialog.getContentPane();
-    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-    container.add(this.containerCampos);
-    container.add(this.botaoCadastrar);
-    container.add(this.labelErro);
-
-    this.dialog.setMinimumSize(new Dimension(600, container.getMinimumSize().height));
-    this.dialog.pack();
-    this.dialog.setVisible(true);
+    this.mostrar(600);
   }
 
-  private void handleAction(ActionEvent event) {
+  @Override
+  protected void apertouBotao(ActionEvent event) {
     var nome = this.campoNome.getText();
     var descricao = this.campoDescricao.getText();
     var precoCompra = this.campoPrecoCompra.getText();

@@ -1,61 +1,34 @@
 import exceptions.FuncionarioOpException;
-import java.awt.Component;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JDialog;
-import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class TelaEntrarComoFuncionario {
-  private final Dados dados;
-  private final JDialog dialog;
-  private final TelaOpcoes dono;
-
-  private final Container containerCampos = new Container();
-  private final JButton botaoEntrar = new JButton("Entrar");
+public class TelaEntrarComoFuncionario extends TelaFormulario {
+  private final TelaOpcoes telaOpcoes;
   private final JTextField campoEmail = new JTextField();
   private final JTextField campoSenha = new JTextField();
-  private final JLabel labelErro = new JLabel();
 
-  public TelaEntrarComoFuncionario(Dados dados, JDialog dialog, TelaOpcoes dono) {
-    this.dados = dados;
-    this.dono = dono;
-    this.dialog = dialog;
+  public TelaEntrarComoFuncionario(Dados dados, JDialog dialog, TelaOpcoes telaOpcoes) {
+    super(dados, dialog);
+    this.telaOpcoes = telaOpcoes;
+
     this.dialog.setTitle("Entrar como funcionário");
+    this.botaoContinuar.setText("Entrar");
+    this.adicionarCampo("Email:", this.campoEmail);
+    this.adicionarCampo("Senha:", this.campoSenha);
 
-    this.botaoEntrar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoEntrar.addActionListener(this::handleAction);
-    this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-    this.containerCampos.setLayout(new GridLayout(0, 2));
-    this.containerCampos.add(new JLabel("Email:"));
-    this.containerCampos.add(this.campoEmail);
-    this.containerCampos.add(new JLabel("Senha:"));
-    this.containerCampos.add(this.campoSenha);
-
-    var container = this.dialog.getContentPane();
-    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
-    container.add(this.containerCampos);
-    container.add(this.botaoEntrar);
-    container.add(this.labelErro);
-
-    this.dialog.setMinimumSize(new Dimension(300, container.getMinimumSize().height));
-    this.dialog.pack();
-    this.dialog.setVisible(true);
+    this.mostrar(300);
   }
 
-  private void handleAction(ActionEvent event) {
+  @Override
+  protected void apertouBotao(ActionEvent event) {
     String email = this.campoEmail.getText();
     String senha = this.campoSenha.getText();
 
     try {
       var funcionario = this.dados.funcionarios.entrar(email, senha);
       this.dados.funcionario = funcionario;
-      this.dono.atualizarBotoes();
+      this.telaOpcoes.atualizarBotoes();
       this.dialog.setVisible(false);
     } catch (FuncionarioOpException e) {
       this.labelErro.setText(e.getMessage());

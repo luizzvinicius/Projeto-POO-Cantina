@@ -71,10 +71,10 @@ public class TelaVenderProduto {
 
       var venda = new Venda(this.dados.funcionario.getEmail(), formaPagamento, 0d, produto.getPrecoVenda() * qtdC,
           LocalDate.now());
-      this.dados.vendaDao.adicionar(venda);
+      this.dados.vendas.adicionar(venda);
 
       var item = new Item(venda.getCodigo(), produto.getCodigo(), qtdC, produto.getPrecoVenda());
-      this.dados.itemDao.adicionar(item);
+      this.dados.itens.adicionar(item);
 
       this.dialog.setVisible(false);
     } catch (NumberFormatException | VendaInvalidaException e) {

@@ -1,10 +1,10 @@
-import exceptions.ProdutoInvalidoException;
 import exceptions.VendaInvalidaException;
 
 public class Produto {
-  private String nome, descricao;
-  private int codigo, qtdAtual, qtdVendida, qtdComprada, estoqueMinimo;
-  private double precoVenda, precoCompra;
+  private final String nome, descricao;
+  private final int estoqueMinimo;
+  private final double precoVenda, precoCompra;
+  private int codigo, qtdAtual, qtdVendida, qtdComprada;
 
   public Produto(int codigo, String nome, String descricao, double precoVenda, double precoCompra, int qtdAtual,
       int qtdVendida, int qtdComprada, int estoqueMinimo) {
@@ -83,21 +83,5 @@ public class Produto {
 
     this.qtdAtual -= qtd;
     this.qtdVendida += qtd;
-  }
-
-  public void validarParaAdicionar() throws ProdutoInvalidoException {
-    if (this.codigo != -1) {
-      throw new ProdutoInvalidoException("Produto não pode ter um código");
-    } else if (this.nome.isBlank()) {
-      throw new ProdutoInvalidoException("Nome não pode estar vazio");
-    } else if (this.descricao.isBlank()) {
-      throw new ProdutoInvalidoException("Descrição não pode estar vazia");
-    } else if (this.precoCompra <= 0) {
-      throw new ProdutoInvalidoException("Preço de compra deve ser maior que zero");
-    } else if (this.precoVenda < this.precoCompra * 1.1) {
-      throw new ProdutoInvalidoException("Preço de venda não pode ser menor que preço de compra");
-    } else if (this.qtdComprada <= 0) {
-      throw new ProdutoInvalidoException("Quantidade inicial deve ser maior que zero");
-    }
   }
 }

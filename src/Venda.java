@@ -1,10 +1,10 @@
 import java.time.LocalDate;
 
 public class Venda {
+  private final String formaPagamento, emailFunc;
+  private final double desconto, totalVenda;
+  private final LocalDate dataVenda;
   private int codigo;
-  private String formaPagamento, emailFunc;
-  private double desconto, totalVenda;
-  private LocalDate dataVenda;
 
   public Venda(String emailFunc, String formaPagamento, double desconto, double totalVenda, LocalDate dataVenda) {
     this.emailFunc = emailFunc;

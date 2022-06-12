@@ -11,31 +11,30 @@ import javax.swing.JLabel;
 public class TelaResumirEstoque {
   private final String[] FORMAS = new String[] { "Pelo nome", "Pela descrição", "Pela quantidade (decrescente)" };
 
-  private final JDialog dialog;
   private final Dados dados;
-  private final Container container, containerProdutos;
-  private final JButton botaoResumir;
-  private final JComboBox<String> seletorFormasOrdenacao;
+  private final JDialog dialog;
 
-  public TelaResumirEstoque(TelaOpcoes dono, JDialog dialog, Dados dados) {
+  private final Container containerProdutos = new Container();
+  private final JButton botaoContinuar = new JButton("Continuar");
+  private final JComboBox<String> seletorFormasOrdenacao = new JComboBox<>(FORMAS);
+
+  public TelaResumirEstoque(Dados dados, JDialog dialog, TelaOpcoes dono) {
     this.dados = dados;
     this.dialog = dialog;
     this.dialog.setTitle("Resumir estoque");
 
-    this.container = this.dialog.getContentPane();
-    this.containerProdutos = new Container();
-    this.botaoResumir = new JButton("Resumir estoque");
-    this.botaoResumir.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoResumir.addActionListener(this::handleAction);
-    this.seletorFormasOrdenacao = new JComboBox<>(FORMAS);
+    this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.botaoContinuar.addActionListener(this::handleAction);
+
     this.containerProdutos.setLayout(new BoxLayout(this.containerProdutos, BoxLayout.Y_AXIS));
 
-    this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
-    this.container.add(this.seletorFormasOrdenacao);
-    this.container.add(this.botaoResumir);
-    this.container.add(this.containerProdutos);
+    var container = this.dialog.getContentPane();
+    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+    container.add(this.seletorFormasOrdenacao);
+    container.add(this.botaoContinuar);
+    container.add(this.containerProdutos);
 
-    this.dialog.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
+    this.dialog.setMinimumSize(new Dimension(600, container.getMinimumSize().height));
     this.dialog.pack();
     this.dialog.setVisible(true);
   }

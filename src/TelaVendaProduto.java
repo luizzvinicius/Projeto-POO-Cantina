@@ -16,30 +16,24 @@ import javax.swing.JTextField;
 public class TelaVendaProduto {
   private static final String[] FORMAS = new String[] { "Dinheiro", "Cartão de crédito", "Cartão de débito", "Pix" };
 
-  private final JDialog dialog;
   private final Dados dados;
-  private final Container container, containerCampos;
-  private final JButton botaoVender;
-  private final JTextField campoQtd;
-  private final JLabel labelErro;
-  private final JComboBox<Produto> seletorProduto;
-  private final JComboBox<String> seletorFormasPagamento;
+  private final JDialog dialog;
 
-  public TelaVendaProduto(TelaOpcoes dono, JDialog dialog, Dados dados) {
+  private final Container containerCampos = new Container();
+  private final JButton botaoContinuar = new JButton("Continuar");
+  private final JTextField campoQtd = new JTextField();
+  private final JLabel labelErro = new JLabel();
+  private final JComboBox<Produto> seletorProduto = new JComboBox<>();
+  private final JComboBox<String> seletorFormasPagamento = new JComboBox<>(FORMAS);
+
+  public TelaVendaProduto(Dados dados, JDialog dialog, TelaOpcoes dono) {
     this.dados = dados;
     this.dialog = dialog;
     this.dialog.setTitle("Vender produto");
 
-    this.container = this.dialog.getContentPane();
-    this.containerCampos = new Container();
-    this.botaoVender = new JButton("Vender");
-    this.botaoVender.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoVender.addActionListener(this::handleAction);
-    this.seletorProduto = new JComboBox<>();
+    this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.botaoContinuar.addActionListener(this::handleAction);
     this.seletorProduto.setRenderer(this::renderizarProduto);
-    this.campoQtd = new JTextField();
-    this.seletorFormasPagamento = new JComboBox<>(FORMAS);
-    this.labelErro = new JLabel();
     this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     for (var produto : this.dados.estoque.getProdutos()) {
@@ -54,12 +48,13 @@ public class TelaVendaProduto {
     this.containerCampos.add(new JLabel("Forma de pagamento:"));
     this.containerCampos.add(this.seletorFormasPagamento);
 
-    this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
-    this.container.add(this.containerCampos);
-    this.container.add(this.botaoVender);
-    this.container.add(this.labelErro);
+    var container = this.dialog.getContentPane();
+    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+    container.add(this.containerCampos);
+    container.add(this.botaoContinuar);
+    container.add(this.labelErro);
 
-    this.dialog.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
+    this.dialog.setMinimumSize(new Dimension(600, container.getMinimumSize().height));
     this.dialog.pack();
     this.dialog.setVisible(true);
   }

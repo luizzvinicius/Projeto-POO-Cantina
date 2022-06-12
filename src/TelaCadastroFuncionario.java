@@ -11,29 +11,25 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 public class TelaCadastroFuncionario {
+  private final Dados dados;
   private final JDialog dialog;
   private final TelaOpcoes dono;
-  private final Dados dados;
-  private final Container container, containerCampos;
-  private final JButton botaoCadastrar;
-  private final JTextField campoEmail, campoNome, campoSenha;
-  private final JLabel labelErro;
 
-  public TelaCadastroFuncionario(TelaOpcoes dono, JDialog dialog, Dados dados) {
+  private final Container containerCampos = new Container();
+  private final JButton botaoContinuar = new JButton("Continuar");
+  private final JTextField campoEmail = new JTextField();
+  private final JTextField campoNome = new JTextField();
+  private final JTextField campoSenha = new JTextField();
+  private final JLabel labelErro = new JLabel();
+
+  public TelaCadastroFuncionario(Dados dados, JDialog dialog, TelaOpcoes dono) {
     this.dados = dados;
     this.dialog = dialog;
     this.dialog.setTitle("Cadastrar funcionário");
     this.dono = dono;
 
-    this.container = this.dialog.getContentPane();
-    this.containerCampos = new Container();
-    this.botaoCadastrar = new JButton("Cadastrar");
-    this.botaoCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoCadastrar.addActionListener(this::handleAction);
-    this.campoEmail = new JTextField();
-    this.campoNome = new JTextField();
-    this.campoSenha = new JTextField();
-    this.labelErro = new JLabel();
+    this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.botaoContinuar.addActionListener(this::handleAction);
     this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     this.containerCampos.setLayout(new GridLayout(0, 2));
@@ -44,12 +40,13 @@ public class TelaCadastroFuncionario {
     this.containerCampos.add(new JLabel("Senha:"));
     this.containerCampos.add(this.campoSenha);
 
-    this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
-    this.container.add(this.containerCampos);
-    this.container.add(this.botaoCadastrar);
-    this.container.add(this.labelErro);
+    var container = this.dialog.getContentPane();
+    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+    container.add(this.containerCampos);
+    container.add(this.botaoContinuar);
+    container.add(this.labelErro);
 
-    this.dialog.setMinimumSize(new Dimension(300, this.container.getMinimumSize().height));
+    this.dialog.setMinimumSize(new Dimension(300, container.getMinimumSize().height));
     this.dialog.pack();
     this.dialog.setVisible(true);
   }

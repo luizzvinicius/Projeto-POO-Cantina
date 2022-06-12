@@ -11,42 +11,39 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 
 public class TelaRemocaoProduto {
-  private final JDialog dialog;
   private final Dados dados;
-  private final Container container, containerCampos;
-  private final JButton botaoContinuar;
-  private final JComboBox<Produto> seletorProduto;
-  private final JLabel labelErro;
+  private final JDialog dialog;
 
-  public TelaRemocaoProduto(TelaOpcoes dono, JDialog dialog, Dados dados) {
+  private final Container containerCampos = new Container();
+  private final JButton botaoContinuar = new JButton("Continuar");
+  private final JComboBox<Produto> seletorProduto = new JComboBox<>();
+  private final JLabel labelErro = new JLabel();
+
+  public TelaRemocaoProduto(Dados dados, JDialog dialog, TelaOpcoes dono) {
     this.dados = dados;
     this.dialog = dialog;
     this.dialog.setTitle("Remover produto");
 
-    this.container = this.dialog.getContentPane();
-    this.containerCampos = new Container();
-    this.botaoContinuar = new JButton("Continuar");
     this.botaoContinuar.setAlignmentX(Component.CENTER_ALIGNMENT);
     this.botaoContinuar.addActionListener(this::handleAction);
-    this.seletorProduto = new JComboBox<>();
     this.seletorProduto.setRenderer(this::renderizarProduto);
-    this.labelErro = new JLabel();
     this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     this.containerCampos.setLayout(new GridLayout(0, 2));
     this.containerCampos.add(new JLabel("Produto:"));
     this.containerCampos.add(this.seletorProduto);
 
-    this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
-    this.container.add(this.containerCampos);
-    this.container.add(this.botaoContinuar);
-    this.container.add(this.labelErro);
+    var container = this.dialog.getContentPane();
+    container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
+    container.add(this.containerCampos);
+    container.add(this.botaoContinuar);
+    container.add(this.labelErro);
 
     for (var produto : this.dados.estoque.getProdutos()) {
       this.seletorProduto.addItem(produto);
     }
 
-    this.dialog.setMinimumSize(new Dimension(600, this.container.getMinimumSize().height));
+    this.dialog.setMinimumSize(new Dimension(600, container.getMinimumSize().height));
     this.dialog.pack();
     this.dialog.setVisible(true);
   }

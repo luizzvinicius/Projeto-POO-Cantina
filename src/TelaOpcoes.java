@@ -26,12 +26,13 @@ public class TelaOpcoes {
       TelaResumirEstoque::new, TelaProdutosEmFalta::new, TelaLucroPrejuizo::new, TelaOpcoes::sairDaConta
   };
 
-  private final JFrame frame;
-  private final JDialog dialog;
   private final Dados dados;
-  private final Container container;
   private String[] descricoesOpcoes;
   private Opcao[] funcoesOpcoes;
+
+  private final JFrame frame;
+  private final JDialog dialog;
+  private final Container container;
 
   public TelaOpcoes() {
     this.dados = new Dados();
@@ -79,18 +80,18 @@ public class TelaOpcoes {
     this.frame.pack();
   }
 
-  private static void sairDaConta(TelaOpcoes telaOpcoes, JDialog dialog, Dados dados) {
+  private static void sairDaConta(Dados dados, JDialog dialog, TelaOpcoes telaOpcoes) {
     telaOpcoes.dados.funcionario = null;
     telaOpcoes.atualizarBotoes();
   }
 
   private void handleAction(ActionEvent event) {
     var opcao = Integer.parseInt(event.getActionCommand());
-    this.funcoesOpcoes[opcao].rodar(this, this.dialog, this.dados);
+    this.funcoesOpcoes[opcao].rodar(this.dados, this.dialog, this);
   }
 
   @FunctionalInterface
   private interface Opcao {
-    void rodar(TelaOpcoes telaOpcoes, JDialog dialog, Dados dados);
+    void rodar(Dados dados, JDialog dialog, TelaOpcoes telaOpcoes);
   }
 }

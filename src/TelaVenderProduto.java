@@ -13,7 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextField;
 
-public class TelaVendaProduto {
+public class TelaVenderProduto {
   private static final String[] FORMAS = new String[] { "Dinheiro", "Cartão de crédito", "Cartão de débito", "Pix" };
 
   private final Dados dados;
@@ -26,7 +26,7 @@ public class TelaVendaProduto {
   private final JComboBox<Produto> seletorProduto = new JComboBox<>();
   private final JComboBox<String> seletorFormasPagamento = new JComboBox<>(FORMAS);
 
-  public TelaVendaProduto(Dados dados, JDialog dialog, TelaOpcoes dono) {
+  public TelaVenderProduto(Dados dados, JDialog dialog, TelaOpcoes dono) {
     this.dados = dados;
     this.dialog = dialog;
     this.dialog.setTitle("Vender produto");

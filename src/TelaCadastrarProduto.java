@@ -10,7 +10,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class TelaCadastroProduto {
+public class TelaCadastrarProduto {
   private final Dados dados;
   private final JDialog dialog;
 
@@ -24,7 +24,7 @@ public class TelaCadastroProduto {
   private final JTextField campoEstoqueMinimo = new JTextField();
   private final JLabel labelErro = new JLabel();
 
-  public TelaCadastroProduto(Dados dados, JDialog dialog, TelaOpcoes dono) {
+  public TelaCadastrarProduto(Dados dados, JDialog dialog, TelaOpcoes dono) {
     this.dados = dados;
     this.dialog = dialog;
     this.dialog.setTitle("Cadastrar produto");

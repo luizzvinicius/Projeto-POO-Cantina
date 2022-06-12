@@ -7,17 +7,17 @@ import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 
-public class TelaProdutosEmFalta {
+public class TelaMostrarLucroPrejuizo {
   private final Dados dados;
   private final JDialog dialog;
 
   private final Container containerProdutos = new Container();
   private final JButton botaoFechar = new JButton("Fechar");
 
-  public TelaProdutosEmFalta(Dados dados, JDialog dialog, TelaOpcoes dono) {
+  public TelaMostrarLucroPrejuizo(Dados dados, JDialog dialog, TelaOpcoes dono) {
     this.dados = dados;
     this.dialog = dialog;
-    this.dialog.setTitle("Mostrar produtos em falta");
+    this.dialog.setTitle("Mostrar lucro/prejuízo");
 
     this.botaoFechar.setAlignmentX(Component.CENTER_ALIGNMENT);
     this.botaoFechar.addActionListener(this::handleAction);
@@ -25,10 +25,6 @@ public class TelaProdutosEmFalta {
     this.containerProdutos.setLayout(new BoxLayout(this.containerProdutos, BoxLayout.Y_AXIS));
 
     for (var produto : this.dados.estoque.getProdutos()) {
-      if (produto.getQtdAtual() > produto.getEstoqueMinimo()) {
-        continue;
-      }
-
       var msg = "%s, descrição: %s, preço de venda: R$ %.2f, quantidade: %d";
       var nome = produto.getNome();
       var descricao = produto.getDescricao();

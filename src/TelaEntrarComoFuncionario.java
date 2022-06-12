@@ -10,31 +10,28 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-public class TelaCadastroFuncionario {
+public class TelaEntrarComoFuncionario {
   private final Dados dados;
   private final JDialog dialog;
   private final TelaOpcoes dono;
 
   private final Container containerCampos = new Container();
-  private final JButton botaoCadastrar = new JButton("Cadastrar");
+  private final JButton botaoEntrar = new JButton("Entrar");
   private final JTextField campoEmail = new JTextField();
-  private final JTextField campoNome = new JTextField();
   private final JTextField campoSenha = new JTextField();
   private final JLabel labelErro = new JLabel();
 
-  public TelaCadastroFuncionario(Dados dados, JDialog dialog, TelaOpcoes dono) {
+  public TelaEntrarComoFuncionario(Dados dados, JDialog dialog, TelaOpcoes dono) {
     this.dados = dados;
-    this.dialog = dialog;
-    this.dialog.setTitle("Cadastrar funcionário");
     this.dono = dono;
+    this.dialog = dialog;
+    this.dialog.setTitle("Entrar como funcionário");
 
-    this.botaoCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoCadastrar.addActionListener(this::handleAction);
+    this.botaoEntrar.setAlignmentX(Component.CENTER_ALIGNMENT);
+    this.botaoEntrar.addActionListener(this::handleAction);
     this.labelErro.setAlignmentX(Component.CENTER_ALIGNMENT);
 
     this.containerCampos.setLayout(new GridLayout(0, 2));
-    this.containerCampos.add(new JLabel("Nome:"));
-    this.containerCampos.add(this.campoNome);
     this.containerCampos.add(new JLabel("Email:"));
     this.containerCampos.add(this.campoEmail);
     this.containerCampos.add(new JLabel("Senha:"));
@@ -43,7 +40,7 @@ public class TelaCadastroFuncionario {
     var container = this.dialog.getContentPane();
     container.setLayout(new BoxLayout(container, BoxLayout.Y_AXIS));
     container.add(this.containerCampos);
-    container.add(this.botaoCadastrar);
+    container.add(this.botaoEntrar);
     container.add(this.labelErro);
 
     this.dialog.setMinimumSize(new Dimension(300, container.getMinimumSize().height));
@@ -53,12 +50,10 @@ public class TelaCadastroFuncionario {
 
   private void handleAction(ActionEvent event) {
     String email = this.campoEmail.getText();
-    String nome = this.campoSenha.getText();
     String senha = this.campoSenha.getText();
 
     try {
-      var funcionario = new Funcionario(nome, email, senha);
-      this.dados.funcionarios.cadastrar(funcionario);
+      var funcionario = this.dados.funcionarios.entrar(email, senha);
       this.dados.funcionario = funcionario;
       this.dono.atualizarBotoes();
       this.dialog.setVisible(false);

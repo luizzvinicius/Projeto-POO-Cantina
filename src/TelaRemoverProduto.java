@@ -10,7 +10,7 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
-public class TelaRemocaoProduto {
+public class TelaRemoverProduto {
   private final Dados dados;
   private final JDialog dialog;
 
@@ -19,7 +19,7 @@ public class TelaRemocaoProduto {
   private final JComboBox<Produto> seletorProduto = new JComboBox<>();
   private final JLabel labelErro = new JLabel();
 
-  public TelaRemocaoProduto(Dados dados, JDialog dialog, TelaOpcoes dono) {
+  public TelaRemoverProduto(Dados dados, JDialog dialog, TelaOpcoes dono) {
     this.dados = dados;
     this.dialog = dialog;
     this.dialog.setTitle("Remover produto");

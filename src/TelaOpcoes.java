@@ -44,11 +44,7 @@ public class TelaOpcoes {
     this.container = this.frame.getContentPane();
     this.container.setLayout(new BoxLayout(this.container, BoxLayout.Y_AXIS));
     this.atualizarBotoes();
-
-    var dimension = Toolkit.getDefaultToolkit().getScreenSize();
-    int x = (int) ((dimension.getWidth() - this.frame.getWidth()) / 2);
-    int y = (int) ((dimension.getHeight() - this.frame.getHeight()) / 2);
-    this.frame.setLocation(x, y);
+    this.frame.setLocationRelativeTo(null);
     this.frame.setVisible(true);
   }
 

@@ -1,12 +1,16 @@
+import java.awt.Container;
+import java.awt.LayoutManager;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import javax.swing.JDialog;
 
 public class WindowListenerLimpador implements WindowListener {
-  private final JDialog dialog;
+  private final Container container;
+  private final LayoutManager layoutManagerOriginal;
   
   public WindowListenerLimpador(JDialog dialog) {
-    this.dialog = dialog;
+    this.container = dialog.getContentPane();
+    this.layoutManagerOriginal = this.container.getLayout();
   }
 
   @Override
@@ -25,7 +29,8 @@ public class WindowListenerLimpador implements WindowListener {
 
   @Override
   public void windowDeactivated(WindowEvent e) {
-    this.dialog.getContentPane().removeAll();
+    this.container.removeAll();
+    this.container.setLayout(this.layoutManagerOriginal);
   }
 
   @Override

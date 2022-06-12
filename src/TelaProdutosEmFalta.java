@@ -2,20 +2,20 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaProdutosEmFalta extends JDialog implements ActionListener {
+public class TelaProdutosEmFalta extends JDialog {
   private final Dados dados;
   private final Container container, containerProdutos;
   private final JButton botaoFechar;
 
   public TelaProdutosEmFalta(TelaOpcoes dono, Dados dados) {
-    super(dono, "Mostrar produtos em falta", true);
+    super(dono.getFrame(), "Mostrar produtos em falta", true);
     this.dados = dados;
 
     this.container = this.getContentPane();
     this.containerProdutos = new Container();
     this.botaoFechar = new JButton("Fechar");
     this.botaoFechar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoFechar.addActionListener(this);
+    this.botaoFechar.addActionListener(this::actionPerformed);
 
     this.containerProdutos.setLayout(new BoxLayout(this.containerProdutos, BoxLayout.Y_AXIS));
 
@@ -41,8 +41,7 @@ public class TelaProdutosEmFalta extends JDialog implements ActionListener {
     this.setVisible(true);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent event) {
+  private void actionPerformed(ActionEvent event) {
     this.setVisible(false);
     this.dispose();
   }

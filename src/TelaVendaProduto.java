@@ -4,7 +4,7 @@ import java.awt.event.*;
 import java.time.LocalDate;
 import javax.swing.*;
 
-public class TelaVendaProduto extends JDialog implements ActionListener, ListCellRenderer<Produto> {
+public class TelaVendaProduto extends JDialog {
   private static final String[] FORMAS = new String[] { "Dinheiro", "Cartão de crédito", "Cartão de débito", "Pix" };
 
   private final Dados dados;
@@ -16,16 +16,16 @@ public class TelaVendaProduto extends JDialog implements ActionListener, ListCel
   private final JComboBox<String> seletorFormasPagamento;
 
   public TelaVendaProduto(TelaOpcoes dono, Dados dados) {
-    super(dono, "Vender produto", true);
+    super(dono.getFrame(), "Vender produto", true);
     this.dados = dados;
 
     this.container = this.getContentPane();
     this.containerCampos = new Container();
     this.botaoVender = new JButton("Vender");
     this.botaoVender.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoVender.addActionListener(this);
+    this.botaoVender.addActionListener(this::actionPerformed);
     this.seletorProduto = new JComboBox<>();
-    this.seletorProduto.setRenderer(this);
+    this.seletorProduto.setRenderer(this::getListCellRendererComponent);
     this.campoQtd = new JTextField();
     this.seletorFormasPagamento = new JComboBox<>(FORMAS);
     this.labelErro = new JLabel();
@@ -53,8 +53,7 @@ public class TelaVendaProduto extends JDialog implements ActionListener, ListCel
     this.setVisible(true);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent event) {
+  private void actionPerformed(ActionEvent event) {
     var produto = (Produto) this.seletorProduto.getSelectedItem();
     var qtd = this.campoQtd.getText();
     var formaPagamento = (String) this.seletorFormasPagamento.getSelectedItem();
@@ -78,8 +77,7 @@ public class TelaVendaProduto extends JDialog implements ActionListener, ListCel
     }
   }
 
-  @Override
-  public Component getListCellRendererComponent(JList<? extends Produto> list, Produto value, int index,
+  private Component getListCellRendererComponent(JList<? extends Produto> list, Produto value, int index,
       boolean isSelected, boolean cellHasFocus) {
     var msg = "%s, descrição: %s, preço de venda: R$ %.2f, quantidade: %d";
     var nome = value.getNome();

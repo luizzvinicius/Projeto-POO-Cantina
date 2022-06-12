@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaCadastroFuncionario extends JDialog implements ActionListener {
+public class TelaCadastroFuncionario extends JDialog {
   private final TelaOpcoes dono;
   private final Dados dados;
   private final Container container, containerCampos;
@@ -12,7 +12,7 @@ public class TelaCadastroFuncionario extends JDialog implements ActionListener {
   private final JLabel labelErro;
 
   public TelaCadastroFuncionario(TelaOpcoes dono, Dados dados) {
-    super(dono, "Cadastrar funcionário", true);
+    super(dono.getFrame(), "Cadastrar funcionário", true);
     this.dono = dono;
     this.dados = dados;
 
@@ -20,7 +20,7 @@ public class TelaCadastroFuncionario extends JDialog implements ActionListener {
     this.containerCampos = new Container();
     this.botaoCadastrar = new JButton("Cadastrar");
     this.botaoCadastrar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoCadastrar.addActionListener(this);
+    this.botaoCadastrar.addActionListener(this::actionPerformed);
     this.campoEmail = new JTextField();
     this.campoNome = new JTextField();
     this.campoSenha = new JTextField();
@@ -45,8 +45,7 @@ public class TelaCadastroFuncionario extends JDialog implements ActionListener {
     this.setVisible(true);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent event) {
+  private void actionPerformed(ActionEvent event) {
     String email = this.campoEmail.getText();
     String nome = this.campoSenha.getText();
     String senha = this.campoSenha.getText();

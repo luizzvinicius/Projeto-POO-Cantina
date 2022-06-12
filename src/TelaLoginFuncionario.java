@@ -3,7 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 
-public class TelaLoginFuncionario extends JDialog implements ActionListener {
+public class TelaLoginFuncionario extends JDialog {
   private final TelaOpcoes dono;
   private final Dados dados;
   private final Container container, containerCampos;
@@ -12,7 +12,7 @@ public class TelaLoginFuncionario extends JDialog implements ActionListener {
   private final JLabel labelErro;
 
   public TelaLoginFuncionario(TelaOpcoes dono, Dados dados) {
-    super(dono, "Entrar como funcionário", true);
+    super(dono.getFrame(), "Entrar como funcionário", true);
     this.dono = dono;
     this.dados = dados;
 
@@ -20,7 +20,7 @@ public class TelaLoginFuncionario extends JDialog implements ActionListener {
     this.containerCampos = new Container();
     this.botaoEntrar = new JButton("Entrar");
     this.botaoEntrar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoEntrar.addActionListener(this);
+    this.botaoEntrar.addActionListener(this::actionPerformed);
     this.campoEmail = new JTextField();
     this.campoSenha = new JTextField();
     this.labelErro = new JLabel();
@@ -42,8 +42,7 @@ public class TelaLoginFuncionario extends JDialog implements ActionListener {
     this.setVisible(true);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent event) {
+  private void actionPerformed(ActionEvent event) {
     String email = this.campoEmail.getText();
     String senha = this.campoSenha.getText();
 

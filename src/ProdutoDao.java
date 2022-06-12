@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ProdutoDao {
+  private static final List<String> PROPRIEDADES_PERMITIDAS = List.of("nome", "descricao", "qtd_atual");
+
   private static final String COMANDO_ADICIONAR = "INSERT INTO Produto " +
       "(nome, descricao, preco_venda, preco_compra, qtd_atual, qtd_comprada, estoque_minimo)" +
       "VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -13,7 +15,9 @@ public class ProdutoDao {
   private static final String COMANDO_ATUALIZAR = "UPDATE Produto SET " +
       "qtd_atual = ?, qtd_vendida = ?, qtd_comprada = ? WHERE codigo = ?";
 
-  private static final String COMANDO_GET_PRODUTOS = "SELECT * FROM Produto ORDER BY ? ?";
+  private static final String COMANDO_GET_PRODUTOS_N = "SELECT * FROM Produto ORDER BY %s %s";
+  private static final String COMANDO_GET_PRODUTOS_T = "SELECT * FROM Produto ORDER BY LOWER(%s) %s";
+
   private static final String COMANDO_REMOVER = "DELETE FROM Produto WHERE codigo = ?";
 
   private final Connection conexao;
@@ -60,12 +64,16 @@ public class ProdutoDao {
   }
 
   public List<Produto> getProdutos(String propriedade, boolean decrescente) {
-    var produtos = new ArrayList<Produto>();
+    if (!PROPRIEDADES_PERMITIDAS.contains(propriedade)) {
+      throw new IllegalArgumentException("Propriedade não permitida: " + propriedade);
+    }
 
-    try (var stmt = this.conexao.prepareStatement(COMANDO_GET_PRODUTOS)) {
-      stmt.setString(1, propriedade);
-      stmt.setString(2, decrescente ? "desc" : "asc");
-      var result = stmt.executeQuery();
+    var produtos = new ArrayList<Produto>();
+    var sqlBase = "qtd_atual".equals(propriedade) ? COMANDO_GET_PRODUTOS_N : COMANDO_GET_PRODUTOS_T;
+    var sql = String.format(sqlBase, propriedade, (decrescente ? "DESC" : "ASC"));
+
+    try (var stmt = this.conexao.createStatement()) {
+      var result = stmt.executeQuery(sql);
 
       while (result.next()) {
         var codigo = result.getInt("codigo");

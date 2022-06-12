@@ -27,11 +27,11 @@ CREATE TABLE IF NOT EXISTS Cadastra (
 );
 CREATE TABLE IF NOT EXISTS Venda (
   codigo INT(8) AUTO_INCREMENT,
-  data_venda date,
   email_func VARCHAR(30),
-  forma_pagamento VARCHAR(30),
+  data_venda date,
   total_venda DECIMAL(10, 2),
   desconto DECIMAL(10, 2),
+  forma_pagamento VARCHAR(30),
   PRIMARY KEY (codigo),
   FOREIGN KEY (email_func) REFERENCES Funcionario (email)
 );

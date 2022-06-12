@@ -15,7 +15,7 @@ public class TelaLucroPrejuizo extends JDialog {
     this.containerProdutos = new Container();
     this.botaoFechar = new JButton("Fechar");
     this.botaoFechar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoFechar.addActionListener(this::actionPerformed);
+    this.botaoFechar.addActionListener(this::handleAction);
 
     this.containerProdutos.setLayout(new BoxLayout(this.containerProdutos, BoxLayout.Y_AXIS));
 
@@ -37,7 +37,7 @@ public class TelaLucroPrejuizo extends JDialog {
     this.setVisible(true);
   }
 
-  private void actionPerformed(ActionEvent event) {
+  private void handleAction(ActionEvent event) {
     this.setVisible(false);
     this.dispose();
   }

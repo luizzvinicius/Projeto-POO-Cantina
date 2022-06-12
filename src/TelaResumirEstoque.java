@@ -17,7 +17,7 @@ public class TelaResumirEstoque extends JDialog {
     this.containerProdutos = new Container();
     this.botaoResumir = new JButton("Resumir estoque");
     this.botaoResumir.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoResumir.addActionListener(this::actionPerformed);
+    this.botaoResumir.addActionListener(this::handleAction);
     this.seletorFormasOrdenacao = new JComboBox<>(FORMAS);
     this.containerProdutos.setLayout(new BoxLayout(this.containerProdutos, BoxLayout.Y_AXIS));
 
@@ -31,7 +31,7 @@ public class TelaResumirEstoque extends JDialog {
     this.setVisible(true);
   }
 
-  private void actionPerformed(ActionEvent e) {
+  private void handleAction(ActionEvent e) {
     var escolha = this.seletorFormasOrdenacao.getSelectedIndex();
 
     String propriedade = null;

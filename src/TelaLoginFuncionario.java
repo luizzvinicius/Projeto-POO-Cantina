@@ -20,7 +20,7 @@ public class TelaLoginFuncionario extends JDialog {
     this.containerCampos = new Container();
     this.botaoEntrar = new JButton("Entrar");
     this.botaoEntrar.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoEntrar.addActionListener(this::actionPerformed);
+    this.botaoEntrar.addActionListener(this::handleAction);
     this.campoEmail = new JTextField();
     this.campoSenha = new JTextField();
     this.labelErro = new JLabel();
@@ -42,7 +42,7 @@ public class TelaLoginFuncionario extends JDialog {
     this.setVisible(true);
   }
 
-  private void actionPerformed(ActionEvent event) {
+  private void handleAction(ActionEvent event) {
     String email = this.campoEmail.getText();
     String senha = this.campoSenha.getText();
 

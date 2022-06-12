@@ -23,9 +23,9 @@ public class TelaVendaProduto extends JDialog {
     this.containerCampos = new Container();
     this.botaoVender = new JButton("Vender");
     this.botaoVender.setAlignmentX(Component.CENTER_ALIGNMENT);
-    this.botaoVender.addActionListener(this::actionPerformed);
+    this.botaoVender.addActionListener(this::handleAction);
     this.seletorProduto = new JComboBox<>();
-    this.seletorProduto.setRenderer(this::getListCellRendererComponent);
+    this.seletorProduto.setRenderer(this::renderizarProduto);
     this.campoQtd = new JTextField();
     this.seletorFormasPagamento = new JComboBox<>(FORMAS);
     this.labelErro = new JLabel();
@@ -53,7 +53,7 @@ public class TelaVendaProduto extends JDialog {
     this.setVisible(true);
   }
 
-  private void actionPerformed(ActionEvent event) {
+  private void handleAction(ActionEvent event) {
     var produto = (Produto) this.seletorProduto.getSelectedItem();
     var qtd = this.campoQtd.getText();
     var formaPagamento = (String) this.seletorFormasPagamento.getSelectedItem();
@@ -77,7 +77,7 @@ public class TelaVendaProduto extends JDialog {
     }
   }
 
-  private Component getListCellRendererComponent(JList<? extends Produto> list, Produto value, int index,
+  private Component renderizarProduto(JList<? extends Produto> list, Produto value, int index,
       boolean isSelected, boolean cellHasFocus) {
     var msg = "%s, descrição: %s, preço de venda: R$ %.2f, quantidade: %d";
     var nome = value.getNome();

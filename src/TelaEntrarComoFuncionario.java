@@ -1,12 +1,13 @@
 import exceptions.FuncionarioOpException;
 import java.awt.event.ActionEvent;
 import javax.swing.JDialog;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class TelaEntrarComoFuncionario extends TelaFormulario {
   private final TelaOpcoes telaOpcoes;
   private final JTextField campoEmail = new JTextField();
-  private final JTextField campoSenha = new JTextField();
+  private final JPasswordField campoSenha = new JPasswordField();
 
   public TelaEntrarComoFuncionario(Dados dados, JDialog dialog, TelaOpcoes telaOpcoes) {
     super(dados, dialog);
@@ -22,8 +23,8 @@ public class TelaEntrarComoFuncionario extends TelaFormulario {
 
   @Override
   protected void apertouBotao(ActionEvent event) {
-    String email = this.campoEmail.getText();
-    String senha = this.campoSenha.getText();
+    var email = this.campoEmail.getText();
+    var senha = String.valueOf(campoSenha.getPassword());
 
     try {
       var funcionario = this.dados.funcionarios.entrar(email, senha);

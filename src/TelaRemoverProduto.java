@@ -26,12 +26,23 @@ public class TelaRemoverProduto extends TelaFormulario {
   @Override
   protected void apertouBotao(ActionEvent event) {
     var produto = (Produto) this.seletorProduto.getSelectedItem();
+
+    if (produto == null) {
+      this.labelErro.setText("Selecione um produto");
+      this.dialog.pack();
+      return;
+    }
+
     this.dados.estoque.remover(produto);
     this.dialog.setVisible(false);
   }
 
   private Component renderizarProduto(JList<? extends Produto> list, Produto value, int index,
       boolean isSelected, boolean cellHasFocus) {
+    if (value == null) {
+      return new JLabel();
+    }
+
     var msg = "%s, descrição: %s, preço de venda: R$ %.2f, quantidade: %d";
     var nome = value.getNome();
     var descricao = value.getDescricao();

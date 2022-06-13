@@ -11,12 +11,12 @@ public class TelaMostrarProdutosEmFalta extends TelaInformacoesProdutos {
         continue;
       }
 
-      var msg = "%s, descrição: %s, preço de venda: R$ %.2f, quantidade: %d";
+      var msg = "%s, descrição: %s, quantidade: %d, estoque mínimo: %d";
       var nome = produto.getNome();
       var descricao = produto.getDescricao();
       var qtdAtual = produto.getQtdAtual();
-      var precoVenda = produto.getPrecoVenda();
-      this.containerProdutos.add(new JLabel(String.format(msg, nome, descricao, precoVenda, qtdAtual)));
+      var estoqueMinimo = produto.getEstoqueMinimo();
+      this.containerProdutos.add(new JLabel(String.format(msg, nome, descricao, qtdAtual, estoqueMinimo)));
     }
 
     if (containerProdutos.getComponentCount() == 0) {

@@ -81,7 +81,7 @@ public class TelaOpcoes {
   }
 
   private void apertouBotao(ActionEvent event) {
-    var opcao = Integer.parseInt(event.getActionCommand());
+    var opcao = Integer.parseUnsignedInt(event.getActionCommand());
     this.funcoesOpcoes[opcao].rodar(this.dados, this.dialog, this);
   }
 

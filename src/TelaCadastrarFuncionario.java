@@ -1,12 +1,13 @@
 import exceptions.FuncionarioOpException;
 import java.awt.event.ActionEvent;
 import javax.swing.JDialog;
+import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 public class TelaCadastrarFuncionario extends TelaFormulario {
   private final JTextField campoEmail = new JTextField();
   private final JTextField campoNome = new JTextField();
-  private final JTextField campoSenha = new JTextField();
+  private final JPasswordField campoSenha = new JPasswordField();
 
   public TelaCadastrarFuncionario(Dados dados, JDialog dialog, TelaOpcoes telaOpcoes) {
     super(dados, dialog);
@@ -22,9 +23,9 @@ public class TelaCadastrarFuncionario extends TelaFormulario {
 
   @Override
   protected void apertouBotao(ActionEvent event) {
-    String email = this.campoEmail.getText();
-    String nome = this.campoSenha.getText();
-    String senha = this.campoSenha.getText();
+    var email = this.campoEmail.getText();
+    var nome = this.campoNome.getText();
+    var senha = String.valueOf(campoSenha.getPassword());
 
     try {
       this.dados.funcionarios.cadastrar(new Funcionario(nome, email, senha));

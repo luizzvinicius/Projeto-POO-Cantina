@@ -26,7 +26,9 @@ public class TelaVenderProduto extends TelaFormulario {
     this.adicionarCampo("Forma de pagamento:", this.seletorFormasPagamento);
 
     for (var produto : this.dados.estoque.getProdutos()) {
-      this.seletorProduto.addItem(produto);
+      if (produto.getQtdAtual() > 0) {
+        this.seletorProduto.addItem(produto);
+      }
     }
 
     this.mostrar(600);
@@ -37,6 +39,12 @@ public class TelaVenderProduto extends TelaFormulario {
     var produto = (Produto) this.seletorProduto.getSelectedItem();
     var qtd = this.campoQtd.getText();
     var formaPagamento = (String) this.seletorFormasPagamento.getSelectedItem();
+
+    if (produto == null) {
+      this.labelErro.setText("Selecione um produto");
+      this.dialog.pack();
+      return;
+    }
 
     try {
       var qtdC = Integer.parseUnsignedInt(qtd);
@@ -59,6 +67,10 @@ public class TelaVenderProduto extends TelaFormulario {
 
   private Component renderizarProduto(JList<? extends Produto> list, Produto value, int index,
       boolean isSelected, boolean cellHasFocus) {
+    if (value == null) {
+      return new JLabel();
+    }
+
     var msg = "%s, descrição: %s, preço de venda: R$ %.2f, quantidade: %d";
     var nome = value.getNome();
     var descricao = value.getDescricao();

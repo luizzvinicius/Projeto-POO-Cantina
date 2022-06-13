@@ -18,8 +18,8 @@ public class TelaCadastrarProduto extends TelaFormulario {
     this.botaoContinuar.setText("Cadastrar");
     this.adicionarCampo("Nome:", this.campoNome);
     this.adicionarCampo("Descrição:", this.campoDescricao);
-    this.adicionarCampo("Preço de venda:", this.campoPrecoVenda);
     this.adicionarCampo("Preço de compra:", this.campoPrecoCompra);
+    this.adicionarCampo("Preço de venda:", this.campoPrecoVenda);
     this.adicionarCampo("Quantidade inicial:", this.campoQtdInicial);
     this.adicionarCampo("Estoque mínimo:", this.campoEstoqueMinimo);
 
